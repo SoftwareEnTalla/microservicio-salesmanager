@@ -30,7 +30,7 @@
 
 
 import { UpdateSalesManagerMerchantContractDto } from '../dtos/all-dto';
-import { SalesManagerMerchantContract } from '../entities/sales-manager-merchant-contract.entity';
+import { SalesManagerMerchantContract } from '../entities/salesmanager-merchant-contract.entity';
 import { BaseEvent, PayloadEvent } from './base.event'; 
 import { v4 as uuidv4 } from "uuid";
 

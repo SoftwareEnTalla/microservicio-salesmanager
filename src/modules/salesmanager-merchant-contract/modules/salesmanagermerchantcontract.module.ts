@@ -40,7 +40,7 @@ import { SalesManagerMerchantContractRepository } from "../repositories/salesman
 import { SalesManagerMerchantContractResolver } from "../graphql/salesmanagermerchantcontract.resolver";
 import { SalesManagerMerchantContractAuthGuard } from "../guards/salesmanagermerchantcontractauthguard.guard";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
 import { BaseEntity } from "../entities/base.entity";
 import { CacheModule } from "@nestjs/cache-manager";
 import { CqrsModule } from "@nestjs/cqrs";

@@ -31,7 +31,7 @@
 
 import { Injectable, Logger, NotFoundException, OnModuleInit } from "@nestjs/common";
 import { DeleteResult, UpdateResult } from "typeorm";
-import { SalesManager } from "../entities/sales-manager.entity";
+import { SalesManager } from "../entities/salesmanager.entity";
 import { CreateSalesManagerDto, UpdateSalesManagerDto, DeleteSalesManagerDto } from "../dtos/all-dto";
  
 import { generateCacheKey } from "src/utils/functions";
@@ -100,7 +100,7 @@ export class SalesManagerCommandService implements OnModuleInit {
     for (const event of events) {
       await this.eventPublisher.publish(event as any);
       if (process.env.EVENT_STORE_ENABLED === "true") {
-        await this.eventStore.appendEvent('sales-manager-' + event.aggregateId, event);
+        await this.eventStore.appendEvent('salesmanager-' + event.aggregateId, event);
       }
     }
   }
@@ -115,7 +115,23 @@ export class SalesManagerCommandService implements OnModuleInit {
     const entityData = ((entity ?? {}) as Record<string, any>);
     const currentData = ((current ?? {}) as Record<string, any>);
     const pendingEvents: BaseEvent[] = [];
+    if (operation === 'create') {
+      // Regla de servicio: salesmanager-must-reference-user
+      // Todo salesmanager debe mantener referencia a un user canónico.
+      if (!(!(this.dslValue(entityData, currentData, inputData, 'userId') === undefined || this.dslValue(entityData, currentData, inputData, 'userId') === null || (typeof this.dslValue(entityData, currentData, inputData, 'userId') === 'string' && String(this.dslValue(entityData, currentData, inputData, 'userId')).trim() === '') || (Array.isArray(this.dslValue(entityData, currentData, inputData, 'userId')) && this.dslValue(entityData, currentData, inputData, 'userId').length === 0) || (typeof this.dslValue(entityData, currentData, inputData, 'userId') === 'object' && !Array.isArray(this.dslValue(entityData, currentData, inputData, 'userId')) && Object.prototype.toString.call(this.dslValue(entityData, currentData, inputData, 'userId')) === '[object Object]' && Object.keys(Object(this.dslValue(entityData, currentData, inputData, 'userId'))).length === 0)))) {
+        throw new Error('SALESMANAGER_001: El salesmanager debe referenciar un user canónico');
+      }
 
+    }
+
+    if (operation === 'update') {
+      // Regla de servicio: salesmanager-must-reference-user
+      // Todo salesmanager debe mantener referencia a un user canónico.
+      if (!(!(this.dslValue(entityData, currentData, inputData, 'userId') === undefined || this.dslValue(entityData, currentData, inputData, 'userId') === null || (typeof this.dslValue(entityData, currentData, inputData, 'userId') === 'string' && String(this.dslValue(entityData, currentData, inputData, 'userId')).trim() === '') || (Array.isArray(this.dslValue(entityData, currentData, inputData, 'userId')) && this.dslValue(entityData, currentData, inputData, 'userId').length === 0) || (typeof this.dslValue(entityData, currentData, inputData, 'userId') === 'object' && !Array.isArray(this.dslValue(entityData, currentData, inputData, 'userId')) && Object.prototype.toString.call(this.dslValue(entityData, currentData, inputData, 'userId')) === '[object Object]' && Object.keys(Object(this.dslValue(entityData, currentData, inputData, 'userId'))).length === 0)))) {
+        throw new Error('SALESMANAGER_001: El salesmanager debe referenciar un user canónico');
+      }
+
+    }
     if (publishEvents) {
       await this.publishDslDomainEvents(pendingEvents);
     }

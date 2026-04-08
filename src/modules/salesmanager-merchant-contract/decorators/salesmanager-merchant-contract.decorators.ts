@@ -35,24 +35,24 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from "class-validator";
-import { CreateSalesmanagerMerchantContractDto, UpdateSalesmanagerMerchantContractDto } from "../dtos/all-dto";
+import { CreateSalesManagerMerchantContractDto, UpdateSalesManagerMerchantContractDto } from "../dtos/all-dto";
 import { createUnionType } from "@nestjs/graphql";
 
-@ValidatorConstraint({ name: "isCreateOrUpdateSalesmanagerMerchantContractDtoType", async: false })
-export class IsSalesmanagerMerchantContractTypeConstraint implements ValidatorConstraintInterface {
+@ValidatorConstraint({ name: "isCreateOrUpdateSalesManagerMerchantContractDtoType", async: false })
+export class IsSalesManagerMerchantContractTypeConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
     // Verifica si el valor es un objeto y tiene la estructura esperada
     return (
-      value instanceof CreateSalesmanagerMerchantContractDto || value instanceof UpdateSalesmanagerMerchantContractDto
+      value instanceof CreateSalesManagerMerchantContractDto || value instanceof UpdateSalesManagerMerchantContractDto
     );
   }
 
   defaultMessage() {
-    return "El valor debe ser un objeto de tipo CreateSalesmanagerMerchantContractDto o UpdateSalesmanagerMerchantContractDto";
+    return "El valor debe ser un objeto de tipo CreateSalesManagerMerchantContractDto o UpdateSalesManagerMerchantContractDto";
   }
 }
 
-export function isCreateOrUpdateSalesmanagerMerchantContractDtoType(
+export function isCreateOrUpdateSalesManagerMerchantContractDtoType(
   validationOptions?: ValidationOptions
 ) {
   return function (object: Object, propertyName: string) {
@@ -61,14 +61,14 @@ export function isCreateOrUpdateSalesmanagerMerchantContractDtoType(
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsSalesmanagerMerchantContractTypeConstraint,
+      validator: IsSalesManagerMerchantContractTypeConstraint,
     });
   };
 }
 
 // Crear un tipo de unión para GraphQL
-export const SalesmanagerMerchantContractUnion = createUnionType({
-  name: 'SalesmanagerMerchantContractUnion',
-  types: () => [CreateSalesmanagerMerchantContractDto, UpdateSalesmanagerMerchantContractDto] as const,
+export const SalesManagerMerchantContractUnion = createUnionType({
+  name: 'SalesManagerMerchantContractUnion',
+  types: () => [CreateSalesManagerMerchantContractDto, UpdateSalesManagerMerchantContractDto] as const,
 });
 

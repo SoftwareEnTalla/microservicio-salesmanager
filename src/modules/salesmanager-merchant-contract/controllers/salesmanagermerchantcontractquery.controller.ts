@@ -43,7 +43,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam } from "@nestjs/
 import { LogExecutionTime } from "src/common/logger/loggers.functions";
 import { SalesManagerMerchantContractResponse, SalesManagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
 import { LoggerClient } from "src/common/logger/logger.client";
-import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
 import { PaginationArgs } from "src/common/dto/args/pagination.args";
 import { OrderBy, valueOfOrderBy } from "src/common/types/common.types";
 import { Helper } from "src/common/helpers/helpers";

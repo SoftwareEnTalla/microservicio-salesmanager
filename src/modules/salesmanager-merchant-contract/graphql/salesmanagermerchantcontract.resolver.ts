@@ -32,7 +32,7 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 
 //Definición de entidades
-import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
 
 //Definición de comandos
 import {

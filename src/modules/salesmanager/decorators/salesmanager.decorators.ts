@@ -35,24 +35,24 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from "class-validator";
-import { CreateSalesmanagerDto, UpdateSalesmanagerDto } from "../dtos/all-dto";
+import { CreateSalesManagerDto, UpdateSalesManagerDto } from "../dtos/all-dto";
 import { createUnionType } from "@nestjs/graphql";
 
-@ValidatorConstraint({ name: "isCreateOrUpdateSalesmanagerDtoType", async: false })
-export class IsSalesmanagerTypeConstraint implements ValidatorConstraintInterface {
+@ValidatorConstraint({ name: "isCreateOrUpdateSalesManagerDtoType", async: false })
+export class IsSalesManagerTypeConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
     // Verifica si el valor es un objeto y tiene la estructura esperada
     return (
-      value instanceof CreateSalesmanagerDto || value instanceof UpdateSalesmanagerDto
+      value instanceof CreateSalesManagerDto || value instanceof UpdateSalesManagerDto
     );
   }
 
   defaultMessage() {
-    return "El valor debe ser un objeto de tipo CreateSalesmanagerDto o UpdateSalesmanagerDto";
+    return "El valor debe ser un objeto de tipo CreateSalesManagerDto o UpdateSalesManagerDto";
   }
 }
 
-export function isCreateOrUpdateSalesmanagerDtoType(
+export function isCreateOrUpdateSalesManagerDtoType(
   validationOptions?: ValidationOptions
 ) {
   return function (object: Object, propertyName: string) {
@@ -61,14 +61,14 @@ export function isCreateOrUpdateSalesmanagerDtoType(
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsSalesmanagerTypeConstraint,
+      validator: IsSalesManagerTypeConstraint,
     });
   };
 }
 
 // Crear un tipo de unión para GraphQL
-export const SalesmanagerUnion = createUnionType({
-  name: 'SalesmanagerUnion',
-  types: () => [CreateSalesmanagerDto, UpdateSalesmanagerDto] as const,
+export const SalesManagerUnion = createUnionType({
+  name: 'SalesManagerUnion',
+  types: () => [CreateSalesManagerDto, UpdateSalesManagerDto] as const,
 });
 

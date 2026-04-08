@@ -46,7 +46,7 @@ import { SalesManagerMerchantContractCommandService } from "../services/salesman
 import { DeleteResult } from "typeorm";
 import { Logger } from "@nestjs/common";
 import { Helper } from "src/common/helpers/helpers";
-import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
 import { SalesManagerMerchantContractResponse, SalesManagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
 import { CreateSalesManagerMerchantContractDto, UpdateSalesManagerMerchantContractDto } from "../dtos/all-dto"; 
 
