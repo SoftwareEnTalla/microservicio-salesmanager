@@ -29,11 +29,11 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { SalesmanagerGraphqlRepository } from '../repositories/salesmanager.graphql.repository';
+import { SalesManagerGraphqlRepository } from '../repositories/salesmanager.graphql.repository';
 
 @Injectable()
-export class SalesmanagerGraphqlService {
-  constructor(private readonly repository: SalesmanagerGraphqlRepository) {}
+export class SalesManagerGraphqlService {
+  constructor(private readonly repository: SalesManagerGraphqlRepository) {}
 
   async findAll() {
     return this.repository.findAll();

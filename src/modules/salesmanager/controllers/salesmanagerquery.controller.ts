@@ -37,31 +37,31 @@ import {
   NotFoundException,
   Logger,
 } from "@nestjs/common";
-import { SalesmanagerQueryService } from "../services/salesmanagerquery.service";
+import { SalesManagerQueryService } from "../services/salesmanagerquery.service";
 import { FindManyOptions } from "typeorm";
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam } from "@nestjs/swagger";
 import { LogExecutionTime } from "src/common/logger/loggers.functions";
-import { SalesmanagerResponse, SalesmanagersResponse } from "../types/salesmanager.types";
+import { SalesManagerResponse, SalesManagersResponse } from "../types/salesmanager.types";
 import { LoggerClient } from "src/common/logger/logger.client";
-import { Salesmanager } from "../entities/salesmanager.entity";
+import { SalesManager } from "../entities/sales-manager.entity";
 import { PaginationArgs } from "src/common/dto/args/pagination.args";
 import { OrderBy, valueOfOrderBy } from "src/common/types/common.types";
 import { Helper } from "src/common/helpers/helpers";
-import { SalesmanagerDto } from "../dtos/all-dto";
+import { SalesManagerDto } from "../dtos/all-dto";
 
 import { logger } from '@core/logs/logger';
 
-@ApiTags("Salesmanager Query")
+@ApiTags("SalesManager Query")
 @Controller("salesmanagers/query")
-export class SalesmanagerQueryController {
-  #logger = new Logger(SalesmanagerQueryController.name);
+export class SalesManagerQueryController {
+  #logger = new Logger(SalesManagerQueryController.name);
 
-  constructor(private readonly service: SalesmanagerQueryService) {}
+  constructor(private readonly service: SalesManagerQueryService) {}
 
   @Get("list")
   @ApiOperation({ summary: "Get all salesmanager with optional pagination" })
-  @ApiResponse({ status: 200, type: SalesmanagersResponse })
-  @ApiQuery({ name: "options", required: false, type: SalesmanagerDto }) // Ajustar según el tipo real
+  @ApiResponse({ status: 200, type: SalesManagersResponse })
+  @ApiQuery({ name: "options", required: false, type: SalesManagerDto }) // Ajustar según el tipo real
   @ApiQuery({ name: "page", required: false, type: Number })
   @ApiQuery({ name: "size", required: false, type: Number })
   @ApiQuery({ name: "sort", required: false, type: String })
@@ -75,12 +75,12 @@ export class SalesmanagerQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findAll(
-    @Query("options") options?: FindManyOptions<Salesmanager>    
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+    @Query("options") options?: FindManyOptions<SalesManager>    
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
      
       const salesmanagers = await this.service.findAll(options);
@@ -94,8 +94,8 @@ export class SalesmanagerQueryController {
 
   @Get(":id")
   @ApiOperation({ summary: "Get salesmanager by ID" })
-  @ApiResponse({ status: 200, type: SalesmanagerResponse<Salesmanager> })
-  @ApiResponse({ status: 404, description: "Salesmanager not found" })
+  @ApiResponse({ status: 200, type: SalesManagerResponse<SalesManager> })
+  @ApiResponse({ status: 404, description: "SalesManager not found" })
   @ApiParam({ name: 'id', required: true, description: 'ID of the salesmanager to retrieve', type: String })
   @LogExecutionTime({
     layer: "controller",
@@ -103,15 +103,15 @@ export class SalesmanagerQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
-  async findById(@Param("id") id: string): Promise<SalesmanagerResponse<Salesmanager>> {
+  async findById(@Param("id") id: string): Promise<SalesManagerResponse<SalesManager>> {
     try {
       const salesmanager = await this.service.findOne({ where: { id } });
       if (!salesmanager) {
         throw new NotFoundException(
-          "Salesmanager no encontrado para el id solicitado"
+          "SalesManager no encontrado para el id solicitado"
         );
       }
       return salesmanager;
@@ -125,21 +125,21 @@ export class SalesmanagerQueryController {
   @ApiOperation({ summary: "Find salesmanager by specific field" })
   @ApiQuery({ name: "value", required: true, description: 'Value to search for', type: String }) // Documenta el parámetro de consulta
   @ApiParam({ name: 'field', required: true, description: 'Field to filter salesmanager', type: String }) // Documenta el parámetro de la ruta
-  @ApiResponse({ status: 200, type: SalesmanagersResponse })
+  @ApiResponse({ status: 200, type: SalesManagersResponse })
   @LogExecutionTime({
     layer: "controller",
     callback: async (logData, client) => {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findByField(
     @Param("field") field: string, // Obtiene el campo de la ruta
     @Query("value") value: string, // Obtiene el valor de la consulta
     @Query() paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const entities = await this.service.findAndCount({
         where: { [field]: value },
@@ -151,7 +151,7 @@ export class SalesmanagerQueryController {
 
       if (!entities) {
         throw new NotFoundException(
-          "Salesmanager no encontrados para la propiedad y valor especificado"
+          "SalesManager no encontrados para la propiedad y valor especificado"
         );
       }
       return entities;
@@ -164,8 +164,8 @@ export class SalesmanagerQueryController {
 
   @Get("pagination")
   @ApiOperation({ summary: "Find salesmanagers with pagination" })
-  @ApiResponse({ status: 200, type: SalesmanagersResponse<Salesmanager> })
-  @ApiQuery({ name: "options", required: false, type: SalesmanagerDto }) // Ajustar según el tipo real
+  @ApiResponse({ status: 200, type: SalesManagersResponse<SalesManager> })
+  @ApiQuery({ name: "options", required: false, type: SalesManagerDto }) // Ajustar según el tipo real
   @ApiQuery({ name: "page", required: false, type: Number })
   @ApiQuery({ name: "size", required: false, type: Number })
   @ApiQuery({ name: "sort", required: false, type: String })
@@ -179,11 +179,11 @@ export class SalesmanagerQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findWithPagination(
-    @Query() options: FindManyOptions<Salesmanager>,
+    @Query() options: FindManyOptions<SalesManager>,
     @Query("page") page?: number,
     @Query("size") size?: number,
     @Query("sort") sort?: string,
@@ -191,7 +191,7 @@ export class SalesmanagerQueryController {
     @Query("search") search?: string,
     @Query("initDate") initDate?: Date,
     @Query("endDate") endDate?: Date
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
      const paginationArgs: PaginationArgs = PaginationArgs.createPaginator(
         page || 1,
@@ -207,7 +207,7 @@ export class SalesmanagerQueryController {
         paginationArgs
       );
       if (!entities) {
-        throw new NotFoundException("Entidades Salesmanagers no encontradas.");
+        throw new NotFoundException("Entidades SalesManagers no encontradas.");
       }
       return entities;
     } catch (error) {
@@ -225,8 +225,8 @@ export class SalesmanagerQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async count(): Promise<number> {
     return this.service.count();
@@ -234,7 +234,7 @@ export class SalesmanagerQueryController {
 
   @Get("search")
   @ApiOperation({ summary: "Find and count salesmanagers with conditions" })
-  @ApiResponse({ status: 200, type: SalesmanagersResponse<Salesmanager> })
+  @ApiResponse({ status: 200, type: SalesManagersResponse<SalesManager> })
   @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
   @ApiQuery({ name: "page", required: false, type: Number })
   @ApiQuery({ name: "size", required: false, type: Number })
@@ -249,8 +249,8 @@ export class SalesmanagerQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findAndCount(
     @Query() where: Record<string, any>={},
@@ -261,7 +261,7 @@ export class SalesmanagerQueryController {
     @Query("search") search?: string,
     @Query("initDate") initDate?: Date,
     @Query("endDate") endDate?: Date
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const paginationArgs: PaginationArgs = PaginationArgs.createPaginator(
         page || 1,
@@ -279,7 +279,7 @@ export class SalesmanagerQueryController {
 
       if (!entities) {
         throw new NotFoundException(
-          "Entidades Salesmanagers no encontradas para el criterio especificado."
+          "Entidades SalesManagers no encontradas para el criterio especificado."
         );
       }
       return entities;
@@ -291,7 +291,7 @@ export class SalesmanagerQueryController {
 
   @Get("find-one")
   @ApiOperation({ summary: "Find one salesmanager with conditions" })
-  @ApiResponse({ status: 200, type: SalesmanagerResponse<Salesmanager> })
+  @ApiResponse({ status: 200, type: SalesManagerResponse<SalesManager> })
   @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
   @LogExecutionTime({
     layer: "controller",
@@ -299,19 +299,19 @@ export class SalesmanagerQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findOne(
     @Query() where: Record<string, any>={}
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+  ): Promise<SalesManagerResponse<SalesManager>> {
     try {
       const entity = await this.service.findOne({
         where: where,
       });
 
       if (!entity) {
-        throw new NotFoundException("Entidad Salesmanager no encontrada.");
+        throw new NotFoundException("Entidad SalesManager no encontrada.");
       }
       return entity;
     } catch (error) {
@@ -322,7 +322,7 @@ export class SalesmanagerQueryController {
 
   @Get("find-one-or-fail")
   @ApiOperation({ summary: "Find one salesmanager or return error" })
-  @ApiResponse({ status: 200, type: SalesmanagerResponse<Salesmanager> })
+  @ApiResponse({ status: 200, type: SalesManagerResponse<SalesManager> })
   @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
   @LogExecutionTime({
     layer: "controller",
@@ -330,19 +330,19 @@ export class SalesmanagerQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findOneOrFail(
     @Query() where: Record<string, any>={}
-  ): Promise<SalesmanagerResponse<Salesmanager> | Error> {
+  ): Promise<SalesManagerResponse<SalesManager> | Error> {
     try {
       const entity = await this.service.findOne({
         where: where,
       });
 
       if (!entity) {
-        return new NotFoundException("Entidad Salesmanager no encontrada.");
+        return new NotFoundException("Entidad SalesManager no encontrada.");
       }
       return entity;
     } catch (error) {

@@ -44,7 +44,7 @@ dotenv.config();
       useFactory: () => {
         const client = LoggerClient.getInstance();
         client.registerClient(
-          process.env.KEY_LOG || "Salesmanager",
+          process.env.KEY_LOG || "SalesManager",
           new HttpLoggerClient(getRemoteApiLoggerUrl())
         );
         return client;

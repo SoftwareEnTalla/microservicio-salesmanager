@@ -33,23 +33,23 @@ import { DynamicModule, Module, OnModuleInit, Optional, Inject } from "@nestjs/c
 import { DataSource } from "typeorm";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
-import { SalesmanagerCommandController } from "./modules/salesmanager/controllers/salesmanagercommand.controller";
-import { SalesmanagerModule } from "./modules/salesmanager/modules/salesmanager.module";
+import { SalesManagerCommandController } from "./modules/salesmanager/controllers/salesmanagercommand.controller";
+import { SalesManagerModule } from "./modules/salesmanager/modules/salesmanager.module";
 import { CqrsModule } from "@nestjs/cqrs";
 import { AppDataSource, initializeDatabase } from "./data-source";
-import { SalesmanagerQueryController } from "./modules/salesmanager/controllers/salesmanagerquery.controller";
+import { SalesManagerQueryController } from "./modules/salesmanager/controllers/salesmanagerquery.controller";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { SalesmanagerCommandService } from "./modules/salesmanager/services/salesmanagercommand.service";
-import { SalesmanagerQueryService } from "./modules/salesmanager/services/salesmanagerquery.service";
+import { SalesManagerCommandService } from "./modules/salesmanager/services/salesmanagercommand.service";
+import { SalesManagerQueryService } from "./modules/salesmanager/services/salesmanagerquery.service";
 import { CacheModule } from "@nestjs/cache-manager";
 import { LoggingModule } from "./modules/salesmanager/modules/logger.module";
 import { ModuleRef } from "@nestjs/core";
 import { ServiceRegistry } from "@core/service-registry";
 import LoggerService, { logger } from "@core/logs/logger";
-import { SalesmanagerMerchantContractModule } from "./modules/salesmanager-merchant-contract/modules/salesmanagermerchantcontract.module";
-import { SalesmanagerMerchantContractCommandService } from "./modules/salesmanager-merchant-contract/services/salesmanagermerchantcontractcommand.service";
-import { SalesmanagerMerchantContractQueryService } from "./modules/salesmanager-merchant-contract/services/salesmanagermerchantcontractquery.service";
+import { SalesManagerMerchantContractModule } from "./modules/salesmanager-merchant-contract/modules/salesmanagermerchantcontract.module";
+import { SalesManagerMerchantContractCommandService } from "./modules/salesmanager-merchant-contract/services/salesmanagermerchantcontractcommand.service";
+import { SalesManagerMerchantContractQueryService } from "./modules/salesmanager-merchant-contract/services/salesmanagermerchantcontractquery.service";
 
 //import GraphQLJSON from "graphql-type-json";
 
@@ -111,11 +111,11 @@ import LoggerService, { logger } from "@core/logs/logger";
       : []),
 
     /**
-     * Módulos Salesmanager de la aplicación
+     * Módulos SalesManager de la aplicación
      */
     CqrsModule,
-    SalesmanagerModule,
-        SalesmanagerMerchantContractModule,    
+    SalesManagerModule,
+        SalesManagerMerchantContractModule,    
     /**
      * Módulo Logger de la aplicación
      */
@@ -136,22 +136,22 @@ import LoggerService, { logger } from "@core/logs/logger";
   ],
 
   /**
-   * Controladores de Salesmanager
+   * Controladores de SalesManager
    *
    * Registro de controladores a nivel de aplicación.
    */
   controllers: [
-  //No se recomienda habilitar los controladores si ya fueron declarados en el módulo: SalesmanagerModule
+  //No se recomienda habilitar los controladores si ya fueron declarados en el módulo: SalesManagerModule
   /*
   
-  SalesmanagerCommandController, 
-  SalesmanagerQueryController
+  SalesManagerCommandController, 
+  SalesManagerQueryController
   
   */
   ],
 
   /**
-   * Proveedores (Servicios, Repositorios, etc.) de Salesmanager
+   * Proveedores (Servicios, Repositorios, etc.) de SalesManager
    *
    * Registro de servicios globales y configuración de inyección de dependencias.
    */
@@ -166,8 +166,8 @@ import LoggerService, { logger } from "@core/logs/logger";
         ]
       : []),
     // Se importan los servicios del módulo
-    SalesmanagerCommandService,
-    SalesmanagerQueryService,
+    SalesManagerCommandService,
+    SalesManagerQueryService,
     LoggerService
   ],
 
@@ -176,9 +176,9 @@ import LoggerService, { logger } from "@core/logs/logger";
    *
    * Hace disponibles módulos y servicios para otros módulos que importen este módulo.
    */
-  exports: [SalesmanagerCommandService, SalesmanagerQueryService,LoggerService],
+  exports: [SalesManagerCommandService, SalesManagerQueryService,LoggerService],
 })
-export class SalesmanagerAppModule implements OnModuleInit {
+export class SalesManagerAppModule implements OnModuleInit {
   /**
    * Constructor del módulo principal
    * @param dataSource Instancia inyectada del DataSource
@@ -198,10 +198,10 @@ export class SalesmanagerAppModule implements OnModuleInit {
     //Inicializar servicios del microservicio
     ServiceRegistry.getInstance().setModuleRef(this.moduleRef);
     ServiceRegistry.getInstance().registryAll([
-      SalesmanagerCommandService,
-      SalesmanagerQueryService,
-      SalesmanagerMerchantContractCommandService,
-      SalesmanagerMerchantContractQueryService,    
+      SalesManagerCommandService,
+      SalesManagerQueryService,
+      SalesManagerMerchantContractCommandService,
+      SalesManagerMerchantContractQueryService,    
     ]);
     const loggerService = ServiceRegistry.getInstance().get(
       "LoggerService"

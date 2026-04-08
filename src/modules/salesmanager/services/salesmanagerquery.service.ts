@@ -31,10 +31,10 @@
 
 import { Injectable, Logger, NotFoundException, OnModuleInit } from "@nestjs/common";
 import { FindManyOptions } from "typeorm";
-import { Salesmanager } from "../entities/salesmanager.entity";
+import { SalesManager } from "../entities/sales-manager.entity";
 import { BaseEntity } from "../entities/base.entity";
-import { SalesmanagerQueryRepository } from "../repositories/salesmanagerquery.repository";
-import { SalesmanagerResponse, SalesmanagersResponse } from "../types/salesmanager.types";
+import { SalesManagerQueryRepository } from "../repositories/salesmanagerquery.repository";
+import { SalesManagerResponse, SalesManagersResponse } from "../types/salesmanager.types";
 import { Helper } from "src/common/helpers/helpers";
 import { PaginationArgs } from "src/common/dto/args/pagination.args";
 //import { Cacheable } from "../decorators/cache.decorator";
@@ -48,12 +48,12 @@ import { logger } from '@core/logs/logger';
 
 
 @Injectable()
-export class SalesmanagerQueryService implements OnModuleInit{
+export class SalesManagerQueryService implements OnModuleInit{
   // Private properties
-  readonly #logger = new Logger(SalesmanagerQueryService.name);
+  readonly #logger = new Logger(SalesManagerQueryService.name);
   private readonly loggerClient = LoggerClient.getInstance();
 
-  constructor(private readonly repository: SalesmanagerQueryRepository,
+  constructor(private readonly repository: SalesManagerQueryRepository,
   private moduleRef: ModuleRef
   ) {
     this.validate();
@@ -74,8 +74,8 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   onModuleInit() {
     //Se ejecuta en la inicialización del módulo
@@ -97,14 +97,14 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   private validate(): void {
     try {
-      const entityInstance = Object.create(Salesmanager.prototype);
+      const entityInstance = Object.create(SalesManager.prototype);
       if (!(entityInstance instanceof BaseEntity)) {
-        let sms = `El tipo ${Salesmanager.name} no extiende de BaseEntity. Asegúrate de que todas las entidades hereden correctamente.`;
+        let sms = `El tipo ${SalesManager.name} no extiende de BaseEntity. Asegúrate de que todas las entidades hereden correctamente.`;
         logger.info(sms);
         throw new Error(sms);
       }
@@ -130,13 +130,13 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findAll(
-    options?: FindManyOptions<Salesmanager>,
+    options?: FindManyOptions<SalesManager>,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const salesmanagers = await this.repository.findAll(options);
       // Devolver respuesta
@@ -175,10 +175,10 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
-  async findById(id: string): Promise<SalesmanagerResponse<Salesmanager>> {
+  async findById(id: string): Promise<SalesManagerResponse<SalesManager>> {
     try {
       const salesmanager = await this.repository.findOne({
         where: { id },
@@ -187,12 +187,12 @@ export class SalesmanagerQueryService implements OnModuleInit{
       // Respuesta si el salesmanager no existe
       if (!salesmanager)
         throw new NotFoundException(
-          "Salesmanager no encontrado para el id solicitado"
+          "SalesManager no encontrado para el id solicitado"
         );
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanager obtenido con éxito",
+        message: "SalesManager obtenido con éxito",
         data: salesmanager,
       };
     } catch (error) {
@@ -220,14 +220,14 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findByField(
     field: string,
     value: any,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const [entities, lenght] = await this.repository.findAndCount({
         where: { [field]: value },
@@ -240,12 +240,12 @@ export class SalesmanagerQueryService implements OnModuleInit{
       // Respuesta si el salesmanager no existe
       if (!entities)
         throw new NotFoundException(
-          "Salesmanagers no encontrados para la propiedad y valor especificado"
+          "SalesManagers no encontrados para la propiedad y valor especificado"
         );
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanagers obtenidos con éxito.",
+        message: "SalesManagers obtenidos con éxito.",
         data: entities,
         pagination: Helper.getPaginator(
           paginationArgs ? paginationArgs.page : 1,
@@ -278,13 +278,13 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findWithPagination(
-    options: FindManyOptions<Salesmanager>,
+    options: FindManyOptions<SalesManager>,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const entities = await this.repository.findWithPagination(
         options,
@@ -294,11 +294,11 @@ export class SalesmanagerQueryService implements OnModuleInit{
 
       // Respuesta si el salesmanager no existe
       if (!entities)
-        throw new NotFoundException("Entidades Salesmanagers no encontradas.");
+        throw new NotFoundException("Entidades SalesManagers no encontradas.");
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanager obtenido con éxito.",
+        message: "SalesManager obtenido con éxito.",
         data: entities,
         count: entities.length,
       };
@@ -327,8 +327,8 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async count(): Promise<number> {
     return this.repository.count();
@@ -351,13 +351,13 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findAndCount(
     where?: Record<string, any>,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const [entities, lenght] = await this.repository.findAndCount({
         where: where,
@@ -366,12 +366,12 @@ export class SalesmanagerQueryService implements OnModuleInit{
       // Respuesta si el salesmanager no existe
       if (!entities)
         throw new NotFoundException(
-          "Entidades Salesmanagers no encontradas para el criterio especificado."
+          "Entidades SalesManagers no encontradas para el criterio especificado."
         );
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanagers obtenidos con éxito.",
+        message: "SalesManagers obtenidos con éxito.",
         data: entities,
         pagination: Helper.getPaginator(
           paginationArgs ? paginationArgs.page : 1,
@@ -406,10 +406,10 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
-  async findOne(where?: Record<string, any>): Promise<SalesmanagerResponse<Salesmanager>> {
+  async findOne(where?: Record<string, any>): Promise<SalesManagerResponse<SalesManager>> {
     try {
       const entity = await this.repository.findOne({
         where: where,
@@ -417,11 +417,11 @@ export class SalesmanagerQueryService implements OnModuleInit{
 
       // Respuesta si el salesmanager no existe
       if (!entity)
-        throw new NotFoundException("Entidad Salesmanager no encontrada.");
+        throw new NotFoundException("Entidad SalesManager no encontrada.");
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanager obtenido con éxito.",
+        message: "SalesManager obtenido con éxito.",
         data: entity,
       };
     } catch (error) {
@@ -448,12 +448,12 @@ export class SalesmanagerQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   async findOneOrFail(
     where?: Record<string, any>
-  ): Promise<SalesmanagerResponse<Salesmanager> | Error> {
+  ): Promise<SalesManagerResponse<SalesManager> | Error> {
     try {
       const entity = await this.repository.findOne({
         where: where,
@@ -461,11 +461,11 @@ export class SalesmanagerQueryService implements OnModuleInit{
 
       // Respuesta si el salesmanager no existe
       if (!entity)
-        return new NotFoundException("Entidad Salesmanager no encontrada.");
+        return new NotFoundException("Entidad SalesManager no encontrada.");
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanager obtenido con éxito.",
+        message: "SalesManager obtenido con éxito.",
         data: entity,
       };
     } catch (error) {

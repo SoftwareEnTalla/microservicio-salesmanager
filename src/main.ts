@@ -31,12 +31,12 @@
 
 import { NestFactory } from "@nestjs/core";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-import { SalesmanagerAppModule } from "./app.module";
+import { SalesManagerAppModule } from "./app.module";
 import { AppDataSource, createDatabaseIfNotExists, waitForPostgres } from "./data-source";
 import { INestApplication, Logger } from "@nestjs/common";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 import 'tsconfig-paths/register';
-import { SalesmanagerModule } from "@modules/salesmanager/modules/salesmanager.module";
+import { SalesManagerModule } from "@modules/salesmanager/modules/salesmanager.module";
 import { setupSwagger } from "@config/swagger-config";
 import * as dotenv from "dotenv";
 import { logger } from '@core/logs/logger';
@@ -91,8 +91,8 @@ async function bootstrap() {
         logger.success("Database connection established");
       }
     }
-    logger.info(`ℹCreando instancia del módulo SalesmanagerAppModule...`);
-    const app = await NestFactory.create(SalesmanagerAppModule, {
+    logger.info(`ℹCreando instancia del módulo SalesManagerAppModule...`);
+    const app = await NestFactory.create(SalesManagerAppModule, {
       // Configuración de logs
       bufferLogs: true, // Bufferiza logs hasta que el logger personalizado esté listo
       logger: process.env.NODE_ENV === 'production' 
@@ -133,8 +133,8 @@ async function bootstrap() {
     const swaggerPath = setupSwagger(
       app,
       "api-docs",
-      "Salesmanager Service API",
-      "API completa para gestión de Salesmanagers con documentación automática",
+      "SalesManager Service API",
+      "API completa para gestión de SalesManagers con documentación automática",
       "1.0"
     );
 

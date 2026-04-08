@@ -31,24 +31,24 @@
 
 import { ObjectType, Field } from "@nestjs/graphql";
 import { GQResponseBase } from "src/common/types/common.types";
-import { Salesmanager } from "../entities/salesmanager.entity";
+import { SalesManager } from "../entities/sales-manager.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
 @ObjectType({ description: "Respuesta de salesmanager" })
-export class SalesmanagerResponse<T extends Salesmanager> extends GQResponseBase {
-  @ApiProperty({ type: Salesmanager,nullable:false,description:"Datos de respuesta de Salesmanager" })
-  @Field(() => Salesmanager, { description: "Instancia de Salesmanager", nullable: true })
+export class SalesManagerResponse<T extends SalesManager> extends GQResponseBase {
+  @ApiProperty({ type: SalesManager,nullable:false,description:"Datos de respuesta de SalesManager" })
+  @Field(() => SalesManager, { description: "Instancia de SalesManager", nullable: true })
   data?: T;
 }
 
 @ObjectType({ description: "Respuesta de salesmanagers" })
-export class SalesmanagersResponse<T extends Salesmanager> extends GQResponseBase {
-  @ApiProperty({ type: [Salesmanager],nullable:false,description:"Listado de Salesmanager",default:[] })
-  @Field(() => [Salesmanager], { description: "Listado de Salesmanager", nullable: false,defaultValue:[] })
+export class SalesManagersResponse<T extends SalesManager> extends GQResponseBase {
+  @ApiProperty({ type: [SalesManager],nullable:false,description:"Listado de SalesManager",default:[] })
+  @Field(() => [SalesManager], { description: "Listado de SalesManager", nullable: false,defaultValue:[] })
   data: T[] = [];
 
-  @ApiProperty({ type: Number,nullable:false,description:"Cantidad de Salesmanager",default:0 })
-  @Field(() => Number, { description: "Cantidad de Salesmanager", nullable: false,defaultValue:0 })
+  @ApiProperty({ type: Number,nullable:false,description:"Cantidad de SalesManager",default:0 })
+  @Field(() => Number, { description: "Cantidad de SalesManager", nullable: false,defaultValue:0 })
   count: number = 0;
 }
 

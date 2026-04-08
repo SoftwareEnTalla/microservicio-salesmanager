@@ -35,16 +35,16 @@ import { BaseEvent } from '../../events/base.event';
 
 @Injectable()
 export class EventStoreService {
-  private salesmanager: EventStoreDBClient;
+  private salesManager: EventStoreDBClient;
 
   constructor() {
-    this.salesmanager = EventStoreDBClient.connectionString(
+    this.salesManager = EventStoreDBClient.connectionString(
       'esdb://localhost:2113?tls=false'
     );
   }
 
   async appendEvent(stream: string, event: BaseEvent) {
-    await this.salesmanager.appendToStream(
+    await this.salesManager.appendToStream(
       stream,
       jsonEvent({
         type: event.constructor.name,
@@ -54,6 +54,6 @@ export class EventStoreService {
   }
 
   async readEvents(stream: string) {
-    return this.salesmanager.readStream(stream);
+    return this.salesManager.readStream(stream);
   }
 }

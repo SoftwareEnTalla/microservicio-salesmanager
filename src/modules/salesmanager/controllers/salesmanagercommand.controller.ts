@@ -41,14 +41,14 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from "@nestjs/swagger";
-import { SalesmanagerCommandService } from "../services/salesmanagercommand.service";
+import { SalesManagerCommandService } from "../services/salesmanagercommand.service";
 
 import { DeleteResult } from "typeorm";
 import { Logger } from "@nestjs/common";
 import { Helper } from "src/common/helpers/helpers";
-import { Salesmanager } from "../entities/salesmanager.entity";
-import { SalesmanagerResponse, SalesmanagersResponse } from "../types/salesmanager.types";
-import { CreateSalesmanagerDto, UpdateSalesmanagerDto } from "../dtos/all-dto"; 
+import { SalesManager } from "../entities/sales-manager.entity";
+import { SalesManagerResponse, SalesManagersResponse } from "../types/salesmanager.types";
+import { CreateSalesManagerDto, UpdateSalesManagerDto } from "../dtos/all-dto"; 
 
 //Loggers
 import { LoggerClient } from "src/common/logger/logger.client";
@@ -58,19 +58,19 @@ import { logger } from '@core/logs/logger';
 import { BadRequestException } from "@nestjs/common";
 
 import { CommandBus } from "@nestjs/cqrs";
-//import { SalesmanagerCreatedEvent } from "../events/salesmanagercreated.event";
+//import { SalesManagerCreatedEvent } from "../events/salesmanagercreated.event";
 import { EventStoreService } from "../shared/event-store/event-store.service";
 import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 
-@ApiTags("Salesmanager Command")
+@ApiTags("SalesManager Command")
 @Controller("salesmanagers/command")
-export class SalesmanagerCommandController {
+export class SalesManagerCommandController {
 
-  #logger = new Logger(SalesmanagerCommandController.name);
+  #logger = new Logger(SalesManagerCommandController.name);
 
-  //Constructor del controlador: SalesmanagerCommandController
+  //Constructor del controlador: SalesManagerCommandController
   constructor(
-  private readonly service: SalesmanagerCommandService,
+  private readonly service: SalesManagerCommandService,
   private readonly commandBus: CommandBus,
   private readonly eventStore: EventStoreService,
   private readonly eventPublisher: KafkaEventPublisher
@@ -79,8 +79,8 @@ export class SalesmanagerCommandController {
   }
 
   @ApiOperation({ summary: "Create a new salesmanager" })
-  @ApiBody({ type: CreateSalesmanagerDto })
-  @ApiResponse({ status: 201, type: SalesmanagerResponse<Salesmanager> })
+  @ApiBody({ type: CreateSalesManagerDto })
+  @ApiResponse({ status: 201, type: SalesManagerResponse<SalesManager> })
   @Post()
   @LogExecutionTime({
     layer: "controller",
@@ -97,20 +97,20 @@ export class SalesmanagerCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandController.name)
-      .get(SalesmanagerCommandController.name),
+      .registerClient(SalesManagerCommandController.name)
+      .get(SalesManagerCommandController.name),
   })
   async create(
-    @Body() createSalesmanagerDtoInput: CreateSalesmanagerDto
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+    @Body() createSalesManagerDtoInput: CreateSalesManagerDto
+  ): Promise<SalesManagerResponse<SalesManager>> {
     try {
-      logger.info("Receiving in controller:", createSalesmanagerDtoInput);
-      const entity = await this.service.create(createSalesmanagerDtoInput);
+      logger.info("Receiving in controller:", createSalesManagerDtoInput);
+      const entity = await this.service.create(createSalesManagerDtoInput);
       logger.info("Entity created on controller:", entity);
       if (!entity) {
         throw new NotFoundException("Response salesmanager entity not found.");
       } else if (!entity.data) {
-        throw new NotFoundException("Salesmanager entity not found on response.");
+        throw new NotFoundException("SalesManager entity not found on response.");
       } else if (!entity.data.id) {
         throw new NotFoundException("Id salesmanager is null on order instance.");
       }     
@@ -126,8 +126,8 @@ export class SalesmanagerCommandController {
   
   
   @ApiOperation({ summary: "Create multiple salesmanagers" })
-  @ApiBody({ type: [CreateSalesmanagerDto] })
-  @ApiResponse({ status: 201, type: SalesmanagersResponse<Salesmanager> })
+  @ApiBody({ type: [CreateSalesManagerDto] })
+  @ApiResponse({ status: 201, type: SalesManagersResponse<SalesManager> })
   @Post("bulk")
   @LogExecutionTime({
     layer: "controller",
@@ -144,17 +144,17 @@ export class SalesmanagerCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandController.name)
-      .get(SalesmanagerCommandController.name),
+      .registerClient(SalesManagerCommandController.name)
+      .get(SalesManagerCommandController.name),
   })
   async bulkCreate(
-    @Body() createSalesmanagerDtosInput: CreateSalesmanagerDto[]
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+    @Body() createSalesManagerDtosInput: CreateSalesManagerDto[]
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
-      const entities = await this.service.bulkCreate(createSalesmanagerDtosInput);
+      const entities = await this.service.bulkCreate(createSalesManagerDtosInput);
 
       if (!entities) {
-        throw new NotFoundException("Salesmanager entities not found.");
+        throw new NotFoundException("SalesManager entities not found.");
       }
 
       return entities;
@@ -172,14 +172,14 @@ export class SalesmanagerCommandController {
     description: "Identificador desde la url del endpoint",
   }) // ✅ Documentamos el ID de la URL
   @ApiBody({
-    type: UpdateSalesmanagerDto,
+    type: UpdateSalesManagerDto,
     description: "El Payload debe incluir el mismo ID de la URL",
   })
-  @ApiResponse({ status: 200, type: SalesmanagerResponse<Salesmanager> })
+  @ApiResponse({ status: 200, type: SalesManagerResponse<SalesManager> })
   @ApiResponse({
     status: 400,
     description:
-      "EL ID en la URL no coincide con la instancia Salesmanager a actualizar.",
+      "EL ID en la URL no coincide con la instancia SalesManager a actualizar.",
   }) // ✅ Nuevo status para el error de validación
   @Put(":id")
   @LogExecutionTime({
@@ -197,26 +197,26 @@ export class SalesmanagerCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandController.name)
-      .get(SalesmanagerCommandController.name),
+      .registerClient(SalesManagerCommandController.name)
+      .get(SalesManagerCommandController.name),
   })
   async update(
     @Param("id") id: string,
     @Body() body: any
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+  ): Promise<SalesManagerResponse<SalesManager>> {
     try {
       // Permitir body plano o anidado en 'data'
       const partialEntity = body?.data ? body.data : body;
       // ✅ Validación de coincidencia de IDs
       if (id !== partialEntity.id) {
         throw new BadRequestException(
-          "El ID en la URL no coincide con el ID en la instancia de Salesmanager a actualizar."
+          "El ID en la URL no coincide con el ID en la instancia de SalesManager a actualizar."
         );
       }
       const entity = await this.service.update(id, partialEntity);
 
       if (!entity) {
-        throw new NotFoundException("Instancia de Salesmanager no encontrada.");
+        throw new NotFoundException("Instancia de SalesManager no encontrada.");
       }
 
       return entity;
@@ -229,8 +229,8 @@ export class SalesmanagerCommandController {
   
   
   @ApiOperation({ summary: "Update multiple salesmanagers" })
-  @ApiBody({ type: [UpdateSalesmanagerDto] })
-  @ApiResponse({ status: 200, type: SalesmanagersResponse<Salesmanager> })
+  @ApiBody({ type: [UpdateSalesManagerDto] })
+  @ApiResponse({ status: 200, type: SalesManagersResponse<SalesManager> })
   @Put("bulk")
   @LogExecutionTime({
     layer: "controller",
@@ -247,17 +247,17 @@ export class SalesmanagerCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandController.name)
-      .get(SalesmanagerCommandController.name),
+      .registerClient(SalesManagerCommandController.name)
+      .get(SalesManagerCommandController.name),
   })
   async bulkUpdate(
-    @Body() partialEntities: UpdateSalesmanagerDto[]
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+    @Body() partialEntities: UpdateSalesManagerDto[]
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const entities = await this.service.bulkUpdate(partialEntities);
 
       if (!entities) {
-        throw new NotFoundException("Salesmanager entities not found.");
+        throw new NotFoundException("SalesManager entities not found.");
       }
 
       return entities;
@@ -270,12 +270,12 @@ export class SalesmanagerCommandController {
   
   
   @ApiOperation({ summary: "Delete an salesmanager" })   
-  @ApiResponse({ status: 200, type: SalesmanagerResponse<Salesmanager>,description:
-    "Instancia de Salesmanager eliminada satisfactoriamente.", })
+  @ApiResponse({ status: 200, type: SalesManagerResponse<SalesManager>,description:
+    "Instancia de SalesManager eliminada satisfactoriamente.", })
   @ApiResponse({
     status: 400,
     description:
-      "EL ID en la URL no coincide con la instancia Salesmanager a eliminar.",
+      "EL ID en la URL no coincide con la instancia SalesManager a eliminar.",
   }) // ✅ Nuevo status para el error de validación
   @Delete(":id")
   @LogExecutionTime({
@@ -293,16 +293,16 @@ export class SalesmanagerCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandController.name)
-      .get(SalesmanagerCommandController.name),
+      .registerClient(SalesManagerCommandController.name)
+      .get(SalesManagerCommandController.name),
   })
-  async delete(@Param("id") id: string): Promise<SalesmanagerResponse<Salesmanager>> {
+  async delete(@Param("id") id: string): Promise<SalesManagerResponse<SalesManager>> {
     try {
        
       const result = await this.service.delete(id);
 
       if (!result) {
-        throw new NotFoundException("Salesmanager entity not found.");
+        throw new NotFoundException("SalesManager entity not found.");
       }
 
       return result;
@@ -332,8 +332,8 @@ export class SalesmanagerCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandController.name)
-      .get(SalesmanagerCommandController.name),
+      .registerClient(SalesManagerCommandController.name)
+      .get(SalesManagerCommandController.name),
   })
   async bulkDelete(@Query("ids") ids: string[]): Promise<DeleteResult> {
     return await this.service.bulkDelete(ids);

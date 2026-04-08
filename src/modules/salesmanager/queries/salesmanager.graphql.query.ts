@@ -29,26 +29,26 @@
  */
 
 import { Query, Resolver, Args } from '@nestjs/graphql'; 
-import { SalesmanagerDto } from '../dtos/all-dto';
-import { SalesmanagerGraphqlService } from '../services/salesmanager.graphql.service';
+import { SalesManagerDto } from '../dtos/all-dto';
+import { SalesManagerGraphqlService } from '../services/salesmanager.graphql.service';
 import { NotFoundException } from '@nestjs/common';
 
-@Resolver(() => SalesmanagerDto)
-export class SalesmanagerGraphqlQuery {
-  constructor(private readonly service: SalesmanagerGraphqlService) {}
+@Resolver(() => SalesManagerDto)
+export class SalesManagerGraphqlQuery {
+  constructor(private readonly service: SalesManagerGraphqlService) {}
 
-  @Query(() => [SalesmanagerDto], { name: 'findAllSalesmanagers' })
-  async findAll(): Promise<SalesmanagerDto[]> {
+  @Query(() => [SalesManagerDto], { name: 'findAllSalesManagers' })
+  async findAll(): Promise<SalesManagerDto[]> {
     return this.service.findAll();
   }
 
-  @Query(() => SalesmanagerDto, { name: 'findSalesmanagerById' })
+  @Query(() => SalesManagerDto, { name: 'findSalesManagerById' })
   async findById(
     @Args('id', { type: () => String }) id: string
-  ): Promise<SalesmanagerDto> {
+  ): Promise<SalesManagerDto> {
     const result = await this.service.findById(id);
     if (!result) {
-      throw new NotFoundException("Salesmanager con id " + id + " no encontrado");
+      throw new NotFoundException("SalesManager con id " + id + " no encontrado");
     }
     return result;
   }

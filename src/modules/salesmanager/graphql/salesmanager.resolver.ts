@@ -32,20 +32,20 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 
 //Definición de entidades
-import { Salesmanager } from "../entities/salesmanager.entity";
+import { SalesManager } from "../entities/sales-manager.entity";
 
 //Definición de comandos
 import {
-  CreateSalesmanagerCommand,
-  UpdateSalesmanagerCommand,
-  DeleteSalesmanagerCommand,
+  CreateSalesManagerCommand,
+  UpdateSalesManagerCommand,
+  DeleteSalesManagerCommand,
 } from "../commands/exporting.command";
 
 import { CommandBus } from "@nestjs/cqrs";
-import { SalesmanagerQueryService } from "../services/salesmanagerquery.service";
+import { SalesManagerQueryService } from "../services/salesmanagerquery.service";
 
 
-import { SalesmanagerResponse, SalesmanagersResponse } from "../types/salesmanager.types";
+import { SalesManagerResponse, SalesManagersResponse } from "../types/salesmanager.types";
 import { FindManyOptions } from "typeorm";
 import { PaginationArgs } from "src/common/dto/args/pagination.args";
 import { fromObject } from "src/utils/functions";
@@ -58,20 +58,20 @@ import { logger } from '@core/logs/logger';
 import { v4 as uuidv4 } from "uuid";
 
 //Definición de tdos
-import { UpdateSalesmanagerDto, 
-CreateOrUpdateSalesmanagerDto, 
-SalesmanagerValueInput, 
-SalesmanagerDto, 
-CreateSalesmanagerDto } from "../dtos/all-dto";
+import { UpdateSalesManagerDto, 
+CreateOrUpdateSalesManagerDto, 
+SalesManagerValueInput, 
+SalesManagerDto, 
+CreateSalesManagerDto } from "../dtos/all-dto";
  
 
 //@UseGuards(JwtGraphQlAuthGuard)
-@Resolver(() => Salesmanager)
-export class SalesmanagerResolver {
+@Resolver(() => SalesManager)
+export class SalesManagerResolver {
 
-   //Constructor del resolver de Salesmanager
+   //Constructor del resolver de SalesManager
   constructor(
-    private readonly service: SalesmanagerQueryService,
+    private readonly service: SalesManagerQueryService,
     private readonly commandBus: CommandBus
   ) {}
 
@@ -90,16 +90,16 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
   // Mutaciones
-  @Mutation(() => SalesmanagerResponse<Salesmanager>)
-  async createSalesmanager(
-    @Args("input", { type: () => CreateSalesmanagerDto }) input: CreateSalesmanagerDto
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
-    return this.commandBus.execute(new CreateSalesmanagerCommand(input));
+  @Mutation(() => SalesManagerResponse<SalesManager>)
+  async createSalesManager(
+    @Args("input", { type: () => CreateSalesManagerDto }) input: CreateSalesManagerDto
+  ): Promise<SalesManagerResponse<SalesManager>> {
+    return this.commandBus.execute(new CreateSalesManagerCommand(input));
   }
 
 
@@ -118,18 +118,18 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
-  @Mutation(() => SalesmanagerResponse<Salesmanager>)
-  async updateSalesmanager(
+  @Mutation(() => SalesManagerResponse<SalesManager>)
+  async updateSalesManager(
     @Args("id", { type: () => String }) id: string,
-    @Args("input") input: UpdateSalesmanagerDto
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+    @Args("input") input: UpdateSalesManagerDto
+  ): Promise<SalesManagerResponse<SalesManager>> {
     const payLoad = input;
     return this.commandBus.execute(
-      new UpdateSalesmanagerCommand(payLoad, {
+      new UpdateSalesManagerCommand(payLoad, {
         instance: payLoad,
         metadata: {
           initiatedBy: payLoad.createdBy || 'system',
@@ -155,24 +155,24 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
-  @Mutation(() => SalesmanagerResponse<Salesmanager>)
-  async createOrUpdateSalesmanager(
-    @Args("data", { type: () => CreateOrUpdateSalesmanagerDto })
-    data: CreateOrUpdateSalesmanagerDto
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+  @Mutation(() => SalesManagerResponse<SalesManager>)
+  async createOrUpdateSalesManager(
+    @Args("data", { type: () => CreateOrUpdateSalesManagerDto })
+    data: CreateOrUpdateSalesManagerDto
+  ): Promise<SalesManagerResponse<SalesManager>> {
     if (data.id) {
-      const existingSalesmanager = await this.service.findById(data.id);
-      if (existingSalesmanager) {
+      const existingSalesManager = await this.service.findById(data.id);
+      if (existingSalesManager) {
         return this.commandBus.execute(
-          new UpdateSalesmanagerCommand(data, {
+          new UpdateSalesManagerCommand(data, {
             instance: data,
             metadata: {
               initiatedBy:
-                (data.input as CreateSalesmanagerDto | UpdateSalesmanagerDto).createdBy ||
+                (data.input as CreateSalesManagerDto | UpdateSalesManagerDto).createdBy ||
                 'system',
               correlationId: data.id,
             },
@@ -181,11 +181,11 @@ export class SalesmanagerResolver {
       }
     }
     return this.commandBus.execute(
-      new CreateSalesmanagerCommand(data, {
+      new CreateSalesManagerCommand(data, {
         instance: data,
         metadata: {
           initiatedBy:
-            (data.input as CreateSalesmanagerDto | UpdateSalesmanagerDto).createdBy ||
+            (data.input as CreateSalesManagerDto | UpdateSalesManagerDto).createdBy ||
             'system',
           correlationId: data.id || uuidv4(),
         },
@@ -209,15 +209,15 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
   @Mutation(() => Boolean)
-  async deleteSalesmanager(
+  async deleteSalesManager(
     @Args("id", { type: () => String }) id: string
   ): Promise<boolean> {
-    return this.commandBus.execute(new DeleteSalesmanagerCommand(id));
+    return this.commandBus.execute(new DeleteSalesManagerCommand(id));
   }
 
 
@@ -236,16 +236,16 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
   // Queries
-  @Query(() => SalesmanagersResponse<Salesmanager>)
+  @Query(() => SalesManagersResponse<SalesManager>)
   async salesmanagers(
-    options?: FindManyOptions<Salesmanager>,
+    options?: FindManyOptions<SalesManager>,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     return this.service.findAll(options, paginationArgs);
   }
 
@@ -265,14 +265,14 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
-  @Query(() => SalesmanagersResponse<Salesmanager>)
+  @Query(() => SalesManagersResponse<SalesManager>)
   async salesmanager(
     @Args("id", { type: () => String }) id: string
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+  ): Promise<SalesManagerResponse<SalesManager>> {
     return this.service.findById(id);
   }
 
@@ -292,17 +292,17 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
-  @Query(() => SalesmanagersResponse<Salesmanager>)
+  @Query(() => SalesManagersResponse<SalesManager>)
   async salesmanagersByField(
     @Args("field", { type: () => String }) field: string,
-    @Args("value", { type: () => SalesmanagerValueInput }) value: SalesmanagerValueInput,
+    @Args("value", { type: () => SalesManagerValueInput }) value: SalesManagerValueInput,
     @Args("page", { type: () => Number, defaultValue: 1 }) page: number,
     @Args("limit", { type: () => Number, defaultValue: 10 }) limit: number
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     return this.service.findByField(
       field,
       value,
@@ -326,15 +326,15 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
-  @Query(() => SalesmanagersResponse<Salesmanager>)
+  @Query(() => SalesManagersResponse<SalesManager>)
   async salesmanagersWithPagination(
     @Args("page", { type: () => Number, defaultValue: 1 }) page: number,
     @Args("limit", { type: () => Number, defaultValue: 10 }) limit: number
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     const paginationArgs = fromObject.call(PaginationArgs, {
       page: page,
       limit: limit,
@@ -358,12 +358,12 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
   @Query(() => Number)
-  async totalSalesmanagers(): Promise<number> {
+  async totalSalesManagers(): Promise<number> {
     return this.service.count();
   }
 
@@ -383,15 +383,15 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
-  @Query(() => SalesmanagersResponse<Salesmanager>)
-  async searchSalesmanagers(
-    @Args("where", { type: () => SalesmanagerDto, nullable: false })
+  @Query(() => SalesManagersResponse<SalesManager>)
+  async searchSalesManagers(
+    @Args("where", { type: () => SalesManagerDto, nullable: false })
     where: Record<string, any>
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+  ): Promise<SalesManagersResponse<SalesManager>> {
     const salesmanagers = await this.service.findAndCount(where);
     return salesmanagers;
   }
@@ -412,15 +412,15 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
-  @Query(() => SalesmanagerResponse<Salesmanager>, { nullable: true })
-  async findOneSalesmanager(
-    @Args("where", { type: () => SalesmanagerDto, nullable: false })
+  @Query(() => SalesManagerResponse<SalesManager>, { nullable: true })
+  async findOneSalesManager(
+    @Args("where", { type: () => SalesManagerDto, nullable: false })
     where: Record<string, any>
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+  ): Promise<SalesManagerResponse<SalesManager>> {
     return this.service.findOne(where);
   }
 
@@ -440,15 +440,15 @@ export class SalesmanagerResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerResolver.name)
+      .registerClient(SalesManagerResolver.name)
 
-      .get(SalesmanagerResolver.name),
+      .get(SalesManagerResolver.name),
     })
-  @Query(() => SalesmanagerResponse<Salesmanager>)
-  async findOneSalesmanagerOrFail(
-    @Args("where", { type: () => SalesmanagerDto, nullable: false })
+  @Query(() => SalesManagerResponse<SalesManager>)
+  async findOneSalesManagerOrFail(
+    @Args("where", { type: () => SalesManagerDto, nullable: false })
     where: Record<string, any>
-  ): Promise<SalesmanagerResponse<Salesmanager> | Error> {
+  ): Promise<SalesManagerResponse<SalesManager> | Error> {
     return this.service.findOneOrFail(where);
   }
 }

@@ -29,27 +29,27 @@
  */
 
 import { Injectable } from "@nestjs/common";
-import { Salesmanager } from "../entities/salesmanager.entity";
-import { SalesmanagerRepository } from "../repositories/salesmanager.repository";
+import { SalesManager } from "../entities/sales-manager.entity";
+import { SalesManagerRepository } from "../repositories/salesmanager.repository";
 
 @Injectable()
-export class SalesmanagerService {
-  constructor(private readonly repository: SalesmanagerRepository) {}
+export class SalesManagerService {
+  constructor(private readonly repository: SalesManagerRepository) {}
 
   // Métodos delegados
-  async findAll(options?: any): Promise<Salesmanager[]> {
+  async findAll(options?: any): Promise<SalesManager[]> {
     return this.repository.findAll(options);
   }
 
-  async findById(id: string): Promise<Salesmanager | null> {
+  async findById(id: string): Promise<SalesManager | null> {
     return this.repository.findById(id);
   }
 
-  async findByField(field: string, value: any, page: number, limit: number): Promise<Salesmanager[]> {
+  async findByField(field: string, value: any, page: number, limit: number): Promise<SalesManager[]> {
     return this.repository.findByField(field, value, page, limit);
   }
 
-  async findWithPagination(options: any, page: number, limit: number): Promise<Salesmanager[]> {
+  async findWithPagination(options: any, page: number, limit: number): Promise<SalesManager[]> {
     return this.repository.findWithPagination(options, page, limit);
   }
 
@@ -57,31 +57,31 @@ export class SalesmanagerService {
     return this.repository.count();
   }
 
-  async findAndCount(where?: Record<string, any>): Promise<[Salesmanager[], number]> {
+  async findAndCount(where?: Record<string, any>): Promise<[SalesManager[], number]> {
     return this.repository.findAndCount(where);
   }
 
-  async findOne(where?: Record<string, any>): Promise<Salesmanager | null> {
+  async findOne(where?: Record<string, any>): Promise<SalesManager | null> {
     return this.repository.findOne(where);
   }
 
-  async findOneOrFail(where?: Record<string, any>): Promise<Salesmanager> {
+  async findOneOrFail(where?: Record<string, any>): Promise<SalesManager> {
     return this.repository.findOneOrFail(where);
   }
 
-  async create(entity: Salesmanager): Promise<Salesmanager> {
+  async create(entity: SalesManager): Promise<SalesManager> {
     return this.repository.create(entity);
   }
 
-  async bulkCreate(entities: Salesmanager[]): Promise<Salesmanager[]> {
+  async bulkCreate(entities: SalesManager[]): Promise<SalesManager[]> {
     return this.repository.bulkCreate(entities);
   }
 
-  async update(id: string, partialEntity: Partial<Salesmanager>): Promise<Salesmanager | null> {
+  async update(id: string, partialEntity: Partial<SalesManager>): Promise<SalesManager | null> {
     return this.repository.update(id, partialEntity);
   }
 
-  async bulkUpdate(entities: Partial<Salesmanager>[]): Promise<Salesmanager[]> {
+  async bulkUpdate(entities: Partial<SalesManager>[]): Promise<SalesManager[]> {
     return this.repository.bulkUpdate(entities);
   }
 

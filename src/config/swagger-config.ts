@@ -29,8 +29,8 @@
  */
 
 
-import { SalesmanagerModule } from "@modules/salesmanager/modules/salesmanager.module";
-import { SalesmanagerMerchantContractModule } from "@modules/salesmanager-merchant-contract/modules/salesmanagermerchantcontract.module";
+import { SalesManagerModule } from "@modules/salesmanager/modules/salesmanager.module";
+import { SalesManagerMerchantContractModule } from "@modules/salesmanager-merchant-contract/modules/salesmanagermerchantcontract.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { logger } from '@core/logs/logger';
 
@@ -39,8 +39,8 @@ import { logger } from '@core/logs/logger';
 export function setupSwagger(
   app,
   apiDoc: string = "api-docs",
-  title: string = "Salesmanager Service API",
-  description: string = "API completa para gestión de Salesmanagers con documentación automática",
+  title: string = "SalesManager Service API",
+  description: string = "API completa para gestión de SalesManagers con documentación automática",
   version: string = "1.0"
 ): string {
 try{
@@ -51,7 +51,7 @@ try{
         .setVersion(version)
         // Organiza por módulos/funcionalidades
         //.addTag("Authentication", "Operaciones de autenticación y usuarios")
-        //.addTag("Salesmanagers", "Gestión de transacciones y procesamiento de salesmanagers")
+        //.addTag("SalesManagers", "Gestión de transacciones y procesamiento de salesmanagers")
         //.addTag("Subscriptions", "Manejo de suscripciones recurrentes")
         //.addTag("Webhooks", "Endpoints para integraciones externas")
         //.addTag("Reports", "Generación de reportes y analytics")
@@ -74,7 +74,7 @@ try{
         .build();
 
       const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
-        include: [SalesmanagerModule,         SalesmanagerMerchantContractModule,/*, AuthModule, ReportsModule*/], // Lista todos los módulos
+        include: [SalesManagerModule,         SalesManagerMerchantContractModule,/*, AuthModule, ReportsModule*/], // Lista todos los módulos
         deepScanRoutes: true, // Escanea en profundidad
         ignoreGlobalPrefix: false, // Considera el prefijo global (api/)
         extraModels: [], // Añade esto
@@ -96,7 +96,7 @@ try{
           displayRequestDuration: true,
         },
         customCss: ".swagger-ui .topbar { background-color: #2c3e50; }", // Personalización
-        customSiteTitle: "Salesmanager API Docs",
+        customSiteTitle: "SalesManager API Docs",
         customfavIcon: "/favicon.ico",
       });
   }

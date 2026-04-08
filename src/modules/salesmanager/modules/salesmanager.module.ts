@@ -30,33 +30,33 @@
 
 
 import { Module } from "@nestjs/common";
-import { SalesmanagerCommandController } from "../controllers/salesmanagercommand.controller";
-import { SalesmanagerQueryController } from "../controllers/salesmanagerquery.controller";
-import { SalesmanagerCommandService } from "../services/salesmanagercommand.service";
-import { SalesmanagerQueryService } from "../services/salesmanagerquery.service";
-import { SalesmanagerCommandRepository } from "../repositories/salesmanagercommand.repository";
-import { SalesmanagerQueryRepository } from "../repositories/salesmanagerquery.repository";
-import { SalesmanagerRepository } from "../repositories/salesmanager.repository";
-import { SalesmanagerResolver } from "../graphql/salesmanager.resolver";
-import { SalesmanagerAuthGuard } from "../guards/salesmanagerauthguard.guard";
+import { SalesManagerCommandController } from "../controllers/salesmanagercommand.controller";
+import { SalesManagerQueryController } from "../controllers/salesmanagerquery.controller";
+import { SalesManagerCommandService } from "../services/salesmanagercommand.service";
+import { SalesManagerQueryService } from "../services/salesmanagerquery.service";
+import { SalesManagerCommandRepository } from "../repositories/salesmanagercommand.repository";
+import { SalesManagerQueryRepository } from "../repositories/salesmanagerquery.repository";
+import { SalesManagerRepository } from "../repositories/salesmanager.repository";
+import { SalesManagerResolver } from "../graphql/salesmanager.resolver";
+import { SalesManagerAuthGuard } from "../guards/salesmanagerauthguard.guard";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Salesmanager } from "../entities/salesmanager.entity";
+import { SalesManager } from "../entities/sales-manager.entity";
 import { BaseEntity } from "../entities/base.entity";
 import { CacheModule } from "@nestjs/cache-manager";
 import { CqrsModule } from "@nestjs/cqrs";
 import { KafkaModule } from "./kafka.module";
-import { CreateSalesmanagerHandler } from "../commands/handlers/createsalesmanager.handler";
-import { UpdateSalesmanagerHandler } from "../commands/handlers/updatesalesmanager.handler";
-import { DeleteSalesmanagerHandler } from "../commands/handlers/deletesalesmanager.handler";
-import { GetSalesmanagerByIdHandler } from "../queries/handlers/getsalesmanagerbyid.handler";
-import { GetSalesmanagerByFieldHandler } from "../queries/handlers/getsalesmanagerbyfield.handler";
-import { GetAllSalesmanagerHandler } from "../queries/handlers/getallsalesmanager.handler";
-import { SalesmanagerCrudSaga } from "../sagas/salesmanager-crud.saga";
+import { CreateSalesManagerHandler } from "../commands/handlers/createsalesmanager.handler";
+import { UpdateSalesManagerHandler } from "../commands/handlers/updatesalesmanager.handler";
+import { DeleteSalesManagerHandler } from "../commands/handlers/deletesalesmanager.handler";
+import { GetSalesManagerByIdHandler } from "../queries/handlers/getsalesmanagerbyid.handler";
+import { GetSalesManagerByFieldHandler } from "../queries/handlers/getsalesmanagerbyfield.handler";
+import { GetAllSalesManagerHandler } from "../queries/handlers/getallsalesmanager.handler";
+import { SalesManagerCrudSaga } from "../sagas/salesmanager-crud.saga";
 import { EVENT_TOPICS } from "../events/event-registry";
 
 //Interceptors
-import { SalesmanagerInterceptor } from "../interceptors/salesmanager.interceptor";
-import { SalesmanagerLoggingInterceptor } from "../interceptors/salesmanager.logging.interceptor";
+import { SalesManagerInterceptor } from "../interceptors/salesmanager.interceptor";
+import { SalesManagerLoggingInterceptor } from "../interceptors/salesmanager.logging.interceptor";
 
 //Event-Sourcing dependencies
 import { EventStoreService } from "../shared/event-store/event-store.service";
@@ -65,34 +65,34 @@ import { EventStoreService } from "../shared/event-store/event-store.service";
   imports: [
     CqrsModule,
     KafkaModule,
-    TypeOrmModule.forFeature([BaseEntity, Salesmanager]), // Incluir BaseEntity para herencia
+    TypeOrmModule.forFeature([BaseEntity, SalesManager]), // Incluir BaseEntity para herencia
     CacheModule.register(), // Importa el módulo de caché
   ],
-  controllers: [SalesmanagerCommandController, SalesmanagerQueryController],
+  controllers: [SalesManagerCommandController, SalesManagerQueryController],
   providers: [
     //Services
     EventStoreService,
-    SalesmanagerQueryService,
-    SalesmanagerCommandService,
+    SalesManagerQueryService,
+    SalesManagerCommandService,
     //Repositories
-    SalesmanagerCommandRepository,
-    SalesmanagerQueryRepository,
-    SalesmanagerRepository,      
+    SalesManagerCommandRepository,
+    SalesManagerQueryRepository,
+    SalesManagerRepository,      
     //Resolvers
-    SalesmanagerResolver,
+    SalesManagerResolver,
     //Guards
-    SalesmanagerAuthGuard,
+    SalesManagerAuthGuard,
     //Interceptors
-    SalesmanagerInterceptor,
-    SalesmanagerLoggingInterceptor,
+    SalesManagerInterceptor,
+    SalesManagerLoggingInterceptor,
     //CQRS Handlers
-    CreateSalesmanagerHandler,
-    UpdateSalesmanagerHandler,
-    DeleteSalesmanagerHandler,
-    GetSalesmanagerByIdHandler,
-    GetSalesmanagerByFieldHandler,
-    GetAllSalesmanagerHandler,
-    SalesmanagerCrudSaga,
+    CreateSalesManagerHandler,
+    UpdateSalesManagerHandler,
+    DeleteSalesManagerHandler,
+    GetSalesManagerByIdHandler,
+    GetSalesManagerByFieldHandler,
+    GetAllSalesManagerHandler,
+    SalesManagerCrudSaga,
     //Configurations
     {
       provide: 'EVENT_SOURCING_CONFIG',
@@ -111,20 +111,20 @@ import { EventStoreService } from "../shared/event-store/event-store.service";
     KafkaModule,
     //Services
     EventStoreService,
-    SalesmanagerQueryService,
-    SalesmanagerCommandService,
+    SalesManagerQueryService,
+    SalesManagerCommandService,
     //Repositories
-    SalesmanagerCommandRepository,
-    SalesmanagerQueryRepository,
-    SalesmanagerRepository,      
+    SalesManagerCommandRepository,
+    SalesManagerQueryRepository,
+    SalesManagerRepository,      
     //Resolvers
-    SalesmanagerResolver,
+    SalesManagerResolver,
     //Guards
-    SalesmanagerAuthGuard,
+    SalesManagerAuthGuard,
     //Interceptors
-    SalesmanagerInterceptor,
-    SalesmanagerLoggingInterceptor,
+    SalesManagerInterceptor,
+    SalesManagerLoggingInterceptor,
   ],
 })
-export class SalesmanagerModule {}
+export class SalesManagerModule {}
 

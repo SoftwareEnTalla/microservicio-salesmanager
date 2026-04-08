@@ -33,11 +33,11 @@ import { printSchema } from "graphql";
 import { writeFileSync } from "fs";
 import { NestFactory } from "@nestjs/core";
 import { GraphQLSchemaHost } from "@nestjs/graphql";
-import { SalesmanagerAppModule } from "./app.module";
+import { SalesManagerAppModule } from "./app.module";
 import { logger } from '@core/logs/logger';
 
 async function debugSchema() {
-  const app = await NestFactory.create(SalesmanagerAppModule);
+  const app = await NestFactory.create(SalesManagerAppModule);
   await app.init();
 
   const { schema } = app.get(GraphQLSchemaHost);

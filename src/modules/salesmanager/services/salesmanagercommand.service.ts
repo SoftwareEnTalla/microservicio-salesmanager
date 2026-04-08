@@ -31,14 +31,14 @@
 
 import { Injectable, Logger, NotFoundException, OnModuleInit } from "@nestjs/common";
 import { DeleteResult, UpdateResult } from "typeorm";
-import { Salesmanager } from "../entities/salesmanager.entity";
-import { CreateSalesmanagerDto, UpdateSalesmanagerDto, DeleteSalesmanagerDto } from "../dtos/all-dto";
+import { SalesManager } from "../entities/sales-manager.entity";
+import { CreateSalesManagerDto, UpdateSalesManagerDto, DeleteSalesManagerDto } from "../dtos/all-dto";
  
 import { generateCacheKey } from "src/utils/functions";
-import { SalesmanagerCommandRepository } from "../repositories/salesmanagercommand.repository";
-import { SalesmanagerQueryRepository } from "../repositories/salesmanagerquery.repository";
+import { SalesManagerCommandRepository } from "../repositories/salesmanagercommand.repository";
+import { SalesManagerQueryRepository } from "../repositories/salesmanagerquery.repository";
 import { Cacheable } from "../decorators/cache.decorator";
-import { SalesmanagerResponse, SalesmanagersResponse } from "../types/salesmanager.types";
+import { SalesManagerResponse, SalesManagersResponse } from "../types/salesmanager.types";
 import { Helper } from "src/common/helpers/helpers";
 //Logger
 import { LogExecutionTime } from "src/common/logger/loggers.functions";
@@ -49,18 +49,18 @@ import { CommandBus } from "@nestjs/cqrs";
 import { EventStoreService } from "../shared/event-store/event-store.service";
 import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 import { ModuleRef } from "@nestjs/core";
-import { SalesmanagerQueryService } from "./salesmanagerquery.service";
+import { SalesManagerQueryService } from "./salesmanagerquery.service";
 import { BaseEvent } from "../events/base.event";
 
 
 @Injectable()
-export class SalesmanagerCommandService implements OnModuleInit {
+export class SalesManagerCommandService implements OnModuleInit {
   // Private properties
-  readonly #logger = new Logger(SalesmanagerCommandService.name);
-  //Constructo del servicio SalesmanagerCommandService
+  readonly #logger = new Logger(SalesManagerCommandService.name);
+  //Constructo del servicio SalesManagerCommandService
   constructor(
-    private readonly repository: SalesmanagerCommandRepository,
-    private readonly queryRepository: SalesmanagerQueryRepository,
+    private readonly repository: SalesManagerCommandRepository,
+    private readonly queryRepository: SalesManagerQueryRepository,
     private readonly commandBus: CommandBus,
     private readonly eventStore: EventStoreService,
     private readonly eventPublisher: KafkaEventPublisher,
@@ -85,8 +85,8 @@ export class SalesmanagerCommandService implements OnModuleInit {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerQueryService.name)
-      .get(SalesmanagerQueryService.name),
+      .registerClient(SalesManagerQueryService.name)
+      .get(SalesManagerQueryService.name),
   })
   onModuleInit() {
     //Se ejecuta en la inicialización del módulo
@@ -100,7 +100,7 @@ export class SalesmanagerCommandService implements OnModuleInit {
     for (const event of events) {
       await this.eventPublisher.publish(event as any);
       if (process.env.EVENT_STORE_ENABLED === "true") {
-        await this.eventStore.appendEvent('salesmanager-' + event.aggregateId, event);
+        await this.eventStore.appendEvent('sales-manager-' + event.aggregateId, event);
       }
     }
   }
@@ -108,30 +108,14 @@ export class SalesmanagerCommandService implements OnModuleInit {
   private async applyDslServiceRules(
     operation: "create" | "update" | "delete",
     inputData: Record<string, any>,
-    entity?: Salesmanager | null,
-    current?: Salesmanager | null,
+    entity?: SalesManager | null,
+    current?: SalesManager | null,
     publishEvents: boolean = true,
   ): Promise<void> {
     const entityData = ((entity ?? {}) as Record<string, any>);
     const currentData = ((current ?? {}) as Record<string, any>);
     const pendingEvents: BaseEvent[] = [];
-    if (operation === 'create') {
-      // Regla de servicio: salesmanager-must-reference-user
-      // Todo salesmanager debe mantener referencia a un user canónico.
-      if (!(!(this.dslValue(entityData, currentData, inputData, 'userId') === undefined || this.dslValue(entityData, currentData, inputData, 'userId') === null || (typeof this.dslValue(entityData, currentData, inputData, 'userId') === 'string' && String(this.dslValue(entityData, currentData, inputData, 'userId')).trim() === '') || (Array.isArray(this.dslValue(entityData, currentData, inputData, 'userId')) && this.dslValue(entityData, currentData, inputData, 'userId').length === 0) || (typeof this.dslValue(entityData, currentData, inputData, 'userId') === 'object' && !Array.isArray(this.dslValue(entityData, currentData, inputData, 'userId')) && Object.prototype.toString.call(this.dslValue(entityData, currentData, inputData, 'userId')) === '[object Object]' && Object.keys(Object(this.dslValue(entityData, currentData, inputData, 'userId'))).length === 0)))) {
-        throw new Error('SALESMANAGER_001: El salesmanager debe referenciar un user canónico');
-      }
 
-    }
-
-    if (operation === 'update') {
-      // Regla de servicio: salesmanager-must-reference-user
-      // Todo salesmanager debe mantener referencia a un user canónico.
-      if (!(!(this.dslValue(entityData, currentData, inputData, 'userId') === undefined || this.dslValue(entityData, currentData, inputData, 'userId') === null || (typeof this.dslValue(entityData, currentData, inputData, 'userId') === 'string' && String(this.dslValue(entityData, currentData, inputData, 'userId')).trim() === '') || (Array.isArray(this.dslValue(entityData, currentData, inputData, 'userId')) && this.dslValue(entityData, currentData, inputData, 'userId').length === 0) || (typeof this.dslValue(entityData, currentData, inputData, 'userId') === 'object' && !Array.isArray(this.dslValue(entityData, currentData, inputData, 'userId')) && Object.prototype.toString.call(this.dslValue(entityData, currentData, inputData, 'userId')) === '[object Object]' && Object.keys(Object(this.dslValue(entityData, currentData, inputData, 'userId'))).length === 0)))) {
-        throw new Error('SALESMANAGER_001: El salesmanager debe referenciar un user canónico');
-      }
-
-    }
     if (publishEvents) {
       await this.publishDslDomainEvents(pendingEvents);
     }
@@ -152,31 +136,31 @@ export class SalesmanagerCommandService implements OnModuleInit {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandService.name)
-      .get(SalesmanagerCommandService.name),
+      .registerClient(SalesManagerCommandService.name)
+      .get(SalesManagerCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<CreateSalesmanagerDto>("createSalesmanager", args[0], args[1]),
+      generateCacheKey<CreateSalesManagerDto>("createSalesManager", args[0], args[1]),
     ttl: 60,
   })
   async create(
-    createSalesmanagerDtoInput: CreateSalesmanagerDto
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+    createSalesManagerDtoInput: CreateSalesManagerDto
+  ): Promise<SalesManagerResponse<SalesManager>> {
     try {
-      logger.info("Receiving in service:", createSalesmanagerDtoInput);
-      const candidate = Salesmanager.fromDto(createSalesmanagerDtoInput);
-      await this.applyDslServiceRules("create", createSalesmanagerDtoInput as Record<string, any>, candidate, null, false);
+      logger.info("Receiving in service:", createSalesManagerDtoInput);
+      const candidate = SalesManager.fromDto(createSalesManagerDtoInput);
+      await this.applyDslServiceRules("create", createSalesManagerDtoInput as Record<string, any>, candidate, null, false);
       const entity = await this.repository.create(candidate);
-      await this.applyDslServiceRules("create", createSalesmanagerDtoInput as Record<string, any>, entity, null, true);
+      await this.applyDslServiceRules("create", createSalesManagerDtoInput as Record<string, any>, entity, null, true);
       logger.info("Entity created on service:", entity);
       // Respuesta si el salesmanager no existe
       if (!entity)
-        throw new NotFoundException("Entidad Salesmanager no encontrada.");
+        throw new NotFoundException("Entidad SalesManager no encontrada.");
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanager obtenido con éxito.",
+        message: "SalesManager obtenido con éxito.",
         data: entity,
       };
     } catch (error) {
@@ -204,29 +188,29 @@ export class SalesmanagerCommandService implements OnModuleInit {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandService.name)
-      .get(SalesmanagerCommandService.name),
+      .registerClient(SalesManagerCommandService.name)
+      .get(SalesManagerCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<Salesmanager>("createSalesmanagers", args[0], args[1]),
+      generateCacheKey<SalesManager>("createSalesManagers", args[0], args[1]),
     ttl: 60,
   })
   async bulkCreate(
-    createSalesmanagerDtosInput: CreateSalesmanagerDto[]
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+    createSalesManagerDtosInput: CreateSalesManagerDto[]
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const entities = await this.repository.bulkCreate(
-        createSalesmanagerDtosInput.map((entity) => Salesmanager.fromDto(entity))
+        createSalesManagerDtosInput.map((entity) => SalesManager.fromDto(entity))
       );
 
       // Respuesta si el salesmanager no existe
       if (!entities)
-        throw new NotFoundException("Entidades Salesmanagers no encontradas.");
+        throw new NotFoundException("Entidades SalesManagers no encontradas.");
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanagers creados con éxito.",
+        message: "SalesManagers creados con éxito.",
         data: entities,
         count: entities.length,
       };
@@ -254,21 +238,21 @@ export class SalesmanagerCommandService implements OnModuleInit {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandService.name)
-      .get(SalesmanagerCommandService.name),
+      .registerClient(SalesManagerCommandService.name)
+      .get(SalesManagerCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<UpdateSalesmanagerDto>("updateSalesmanager", args[0], args[1]),
+      generateCacheKey<UpdateSalesManagerDto>("updateSalesManager", args[0], args[1]),
     ttl: 60,
   })
   async update(
     id: string,
-    partialEntity: UpdateSalesmanagerDto
-  ): Promise<SalesmanagerResponse<Salesmanager>> {
+    partialEntity: UpdateSalesManagerDto
+  ): Promise<SalesManagerResponse<SalesManager>> {
     try {
       const currentEntity = await this.queryRepository.findById(id);
-      const candidate = Object.assign(new Salesmanager(), currentEntity ?? {}, partialEntity);
+      const candidate = Object.assign(new SalesManager(), currentEntity ?? {}, partialEntity);
       await this.applyDslServiceRules("update", partialEntity as Record<string, any>, candidate, currentEntity, false);
       const entity = await this.repository.update(
         id,
@@ -277,11 +261,11 @@ export class SalesmanagerCommandService implements OnModuleInit {
       await this.applyDslServiceRules("update", partialEntity as Record<string, any>, entity, currentEntity, true);
       // Respuesta si el salesmanager no existe
       if (!entity)
-        throw new NotFoundException("Entidades Salesmanagers no encontradas.");
+        throw new NotFoundException("Entidades SalesManagers no encontradas.");
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanager actualizada con éxito.",
+        message: "SalesManager actualizada con éxito.",
         data: entity,
       };
     } catch (error) {
@@ -308,28 +292,28 @@ export class SalesmanagerCommandService implements OnModuleInit {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandService.name)
-      .get(SalesmanagerCommandService.name),
+      .registerClient(SalesManagerCommandService.name)
+      .get(SalesManagerCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<UpdateSalesmanagerDto>("updateSalesmanagers", args[0]),
+      generateCacheKey<UpdateSalesManagerDto>("updateSalesManagers", args[0]),
     ttl: 60,
   })
   async bulkUpdate(
-    partialEntity: UpdateSalesmanagerDto[]
-  ): Promise<SalesmanagersResponse<Salesmanager>> {
+    partialEntity: UpdateSalesManagerDto[]
+  ): Promise<SalesManagersResponse<SalesManager>> {
     try {
       const entities = await this.repository.bulkUpdate(
-        partialEntity.map((entity) => Salesmanager.fromDto(entity))
+        partialEntity.map((entity) => SalesManager.fromDto(entity))
       );
       // Respuesta si el salesmanager no existe
       if (!entities)
-        throw new NotFoundException("Entidades Salesmanagers no encontradas.");
+        throw new NotFoundException("Entidades SalesManagers no encontradas.");
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Salesmanagers actualizadas con éxito.",
+        message: "SalesManagers actualizadas con éxito.",
         data: entities,
         count: entities.length,
       };
@@ -356,20 +340,20 @@ export class SalesmanagerCommandService implements OnModuleInit {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandService.name)
-      .get(SalesmanagerCommandService.name),
+      .registerClient(SalesManagerCommandService.name)
+      .get(SalesManagerCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<DeleteSalesmanagerDto>("deleteSalesmanager", args[0], args[1]),
+      generateCacheKey<DeleteSalesManagerDto>("deleteSalesManager", args[0], args[1]),
     ttl: 60,
   })
-  async delete(id: string): Promise<SalesmanagerResponse<Salesmanager>> {
+  async delete(id: string): Promise<SalesManagerResponse<SalesManager>> {
     try {
       const entity = await this.queryRepository.findById(id);
       // Respuesta si el salesmanager no existe
       if (!entity)
-        throw new NotFoundException("Instancias de Salesmanager no encontradas.");
+        throw new NotFoundException("Instancias de SalesManager no encontradas.");
 
       await this.applyDslServiceRules("delete", { id }, entity, entity, false);
 
@@ -378,7 +362,7 @@ export class SalesmanagerCommandService implements OnModuleInit {
       // Devolver salesmanager
       return {
         ok: true,
-        message: "Instancia de Salesmanager eliminada con éxito.",
+        message: "Instancia de SalesManager eliminada con éxito.",
         data: entity,
       };
     } catch (error) {
@@ -404,11 +388,11 @@ export class SalesmanagerCommandService implements OnModuleInit {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerCommandService.name)
-      .get(SalesmanagerCommandService.name),
+      .registerClient(SalesManagerCommandService.name)
+      .get(SalesManagerCommandService.name),
   })
   @Cacheable({
-    key: (args) => generateCacheKey<string[]>("deleteSalesmanagers", args[0]),
+    key: (args) => generateCacheKey<string[]>("deleteSalesManagers", args[0]),
     ttl: 60,
   })
   async bulkDelete(ids: string[]): Promise<DeleteResult> {

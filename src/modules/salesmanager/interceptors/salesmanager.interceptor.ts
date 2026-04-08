@@ -36,7 +36,7 @@ import { EventBus } from '@nestjs/cqrs';
 import { logger } from '@core/logs/logger';
 
 @Injectable()
-export class SalesmanagerInterceptor implements NestInterceptor {
+export class SalesManagerInterceptor implements NestInterceptor {
   constructor(private readonly eventBus: EventBus) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

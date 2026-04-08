@@ -31,7 +31,7 @@
 
 import { BaseEvent,BaseFailedEvent } from './base.event';
 
-export class SagaSalesmanagerFailedEvent extends BaseFailedEvent {
+export class SagaSalesManagerFailedEvent extends BaseFailedEvent {
   constructor(
     public readonly error: Error,
     public readonly event: any

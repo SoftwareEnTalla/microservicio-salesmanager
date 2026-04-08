@@ -107,65 +107,7 @@ export class BaseSalesManagerDto {
   @Field(() => Boolean, { nullable: false })
   isActive: boolean = false; // Por defecto, el objeto no está activo
 
-  @ApiProperty({
-    type: () => String,
-    nullable: false,
-    description: 'Referencia canónica al user del microservicio security',
-  })
-  @IsUUID()
-  @IsNotEmpty()
-  @Field(() => String, { description: 'Referencia canónica al user del microservicio security', nullable: false })
-  userId!: string;
 
-  @ApiProperty({
-    type: () => String,
-    nullable: false,
-    description: 'Código único del gestor de ventas',
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Field(() => String, { description: 'Código único del gestor de ventas', nullable: false })
-  managerCode!: string;
-
-  @ApiProperty({
-    type: () => String,
-    nullable: false,
-    description: 'Estado de habilitación comercial',
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Field(() => String, { description: 'Estado de habilitación comercial', nullable: false })
-  approvalStatus!: string;
-
-  @ApiProperty({
-    type: () => String,
-    nullable: true,
-    description: 'Plan de comisión vigente',
-  })
-  @IsUUID()
-  @IsOptional()
-  @Field(() => String, { description: 'Plan de comisión vigente', nullable: true })
-  commissionPlanId?: string;
-
-  @ApiProperty({
-    type: () => String,
-    nullable: true,
-    description: 'Referencia al árbol de referidos',
-  })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, { description: 'Referencia al árbol de referidos', nullable: true })
-  referralTreeReference?: string = '';
-
-  @ApiProperty({
-    type: () => Object,
-    nullable: true,
-    description: 'Metadatos del gestor de ventas',
-  })
-  @IsObject()
-  @IsOptional()
-  @Field(() => String, { description: 'Metadatos del gestor de ventas', nullable: true })
-  metadata?: Record<string, any> = {};
 
   // Constructor
   constructor(partial: Partial<BaseSalesManagerDto>) {

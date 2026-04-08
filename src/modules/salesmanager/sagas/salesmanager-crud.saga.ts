@@ -33,23 +33,23 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Saga, CommandBus, EventBus, ofType } from '@nestjs/cqrs';
 import { Observable, map, tap } from 'rxjs';
 import {
-  SalesmanagerCreatedEvent,
-  SalesmanagerUpdatedEvent,
-  SalesmanagerDeletedEvent,
+  SalesManagerCreatedEvent,
+  SalesManagerUpdatedEvent,
+  SalesManagerDeletedEvent,
 
 } from '../events/exporting.event';
 import {
-  SagaSalesmanagerFailedEvent
+  SagaSalesManagerFailedEvent
 } from '../events/salesmanager-failed.event';
 import {
-  CreateSalesmanagerCommand,
-  UpdateSalesmanagerCommand,
-  DeleteSalesmanagerCommand
+  CreateSalesManagerCommand,
+  UpdateSalesManagerCommand,
+  DeleteSalesManagerCommand
 } from '../commands/exporting.command';
 
 @Injectable()
-export class SalesmanagerCrudSaga {
-  private readonly logger = new Logger(SalesmanagerCrudSaga.name);
+export class SalesManagerCrudSaga {
+  private readonly logger = new Logger(SalesManagerCrudSaga.name);
 
   constructor(
     private readonly commandBus: CommandBus,
@@ -58,11 +58,11 @@ export class SalesmanagerCrudSaga {
 
   // Reacción a evento de creación
   @Saga()
-  onSalesmanagerCreated = ($events: Observable<SalesmanagerCreatedEvent>) => {
+  onSalesManagerCreated = ($events: Observable<SalesManagerCreatedEvent>) => {
     return $events.pipe(
-      ofType(SalesmanagerCreatedEvent),
+      ofType(SalesManagerCreatedEvent),
       tap(event => {
-        this.logger.log(`Saga iniciada para creación de Salesmanager: ${event.aggregateId}`);
+        this.logger.log(`Saga iniciada para creación de SalesManager: ${event.aggregateId}`);
         // Lógica post-creación (ej: enviar notificación)
       }),
       map(event => {
@@ -74,11 +74,11 @@ export class SalesmanagerCrudSaga {
 
   // Reacción a evento de actualización
   @Saga()
-  onSalesmanagerUpdated = ($events: Observable<SalesmanagerUpdatedEvent>) => {
+  onSalesManagerUpdated = ($events: Observable<SalesManagerUpdatedEvent>) => {
     return $events.pipe(
-      ofType(SalesmanagerUpdatedEvent),
+      ofType(SalesManagerUpdatedEvent),
       tap(event => {
-        this.logger.log(`Saga iniciada para actualización de Salesmanager: ${event.aggregateId}`);
+        this.logger.log(`Saga iniciada para actualización de SalesManager: ${event.aggregateId}`);
         // Lógica post-actualización (ej: actualizar caché)
       })
     );
@@ -86,11 +86,11 @@ export class SalesmanagerCrudSaga {
 
   // Reacción a evento de eliminación
   @Saga()
-  onSalesmanagerDeleted = ($events: Observable<SalesmanagerDeletedEvent>) => {
+  onSalesManagerDeleted = ($events: Observable<SalesManagerDeletedEvent>) => {
     return $events.pipe(
-      ofType(SalesmanagerDeletedEvent),
+      ofType(SalesManagerDeletedEvent),
       tap(event => {
-        this.logger.log(`Saga iniciada para eliminación de Salesmanager: ${event.aggregateId}`);
+        this.logger.log(`Saga iniciada para eliminación de SalesManager: ${event.aggregateId}`);
         // Lógica post-eliminación (ej: limpiar relaciones)
       }),
       map(event => {
@@ -105,6 +105,6 @@ export class SalesmanagerCrudSaga {
   // Método para manejo de errores en sagas
   private handleSagaError(error: Error, event: any) {
     this.logger.error(`Error en saga para evento ${event.constructor.name}: ${error.message}`);
-    this.eventBus.publish(new SagaSalesmanagerFailedEvent( error,event));
+    this.eventBus.publish(new SagaSalesManagerFailedEvent( error,event));
   }
 }

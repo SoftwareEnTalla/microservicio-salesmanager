@@ -30,20 +30,20 @@
 
 
 import { Module } from "@nestjs/common";
-import { SalesmanagerCommandController } from "../controllers/salesmanagercommand.controller";
-import { SalesmanagerLoggingInterceptor } from "../interceptors/salesmanager.logging.interceptor";
+import { SalesManagerCommandController } from "../controllers/salesmanagercommand.controller";
+import { SalesManagerLoggingInterceptor } from "../interceptors/salesmanager.logging.interceptor";
 import { CommandBus, EventBus, UnhandledExceptionBus } from "@nestjs/cqrs";
-import { SalesmanagerAuthGuard } from "../guards/salesmanagerauthguard.guard";
+import { SalesManagerAuthGuard } from "../guards/salesmanagerauthguard.guard";
 
 @Module({
-  controllers: [SalesmanagerCommandController],
+  controllers: [SalesManagerCommandController],
   providers: [
-    SalesmanagerAuthGuard,
-    SalesmanagerLoggingInterceptor,
+    SalesManagerAuthGuard,
+    SalesManagerLoggingInterceptor,
     CommandBus,
     EventBus,
     UnhandledExceptionBus,
   ],
-  exports: [SalesmanagerAuthGuard, CommandBus, EventBus, UnhandledExceptionBus],
+  exports: [SalesManagerAuthGuard, CommandBus, EventBus, UnhandledExceptionBus],
 })
-export class AuthSalesmanagerModule {}
+export class AuthSalesManagerModule {}

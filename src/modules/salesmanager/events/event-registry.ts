@@ -30,9 +30,9 @@
 
 
 import { BaseEvent } from './base.event';
-import { SalesmanagerCreatedEvent } from './salesmanagercreated.event';
-import { SalesmanagerUpdatedEvent } from './salesmanagerupdated.event';
-import { SalesmanagerDeletedEvent } from './salesmanagerdeleted.event';
+import { SalesManagerCreatedEvent } from './salesmanagercreated.event';
+import { SalesManagerUpdatedEvent } from './salesmanagerupdated.event';
+import { SalesManagerDeletedEvent } from './salesmanagerdeleted.event';
 
 export type RegisteredEventClass<T extends BaseEvent = BaseEvent> = new (
   aggregateId: string,
@@ -70,9 +70,9 @@ const EVENT_DEFINITION_OVERRIDES: Partial<Record<string, Partial<Omit<Registered
 };
 
 export const EVENT_DEFINITIONS: Record<string, RegisteredEventDefinition> = {
-  'salesmanager-created': createEventDefinition('salesmanager-created', SalesmanagerCreatedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-created']),
-  'salesmanager-updated': createEventDefinition('salesmanager-updated', SalesmanagerUpdatedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-updated']),
-  'salesmanager-deleted': createEventDefinition('salesmanager-deleted', SalesmanagerDeletedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-deleted']),
+  'salesmanager-created': createEventDefinition('salesmanager-created', SalesManagerCreatedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-created']),
+  'salesmanager-updated': createEventDefinition('salesmanager-updated', SalesManagerUpdatedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-updated']),
+  'salesmanager-deleted': createEventDefinition('salesmanager-deleted', SalesManagerDeletedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-deleted']),
 
 };
 
