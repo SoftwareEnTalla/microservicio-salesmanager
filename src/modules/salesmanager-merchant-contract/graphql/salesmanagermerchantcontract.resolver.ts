@@ -32,20 +32,20 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 
 //Definición de entidades
-import { SalesmanagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
 
 //Definición de comandos
 import {
-  CreateSalesmanagerMerchantContractCommand,
-  UpdateSalesmanagerMerchantContractCommand,
-  DeleteSalesmanagerMerchantContractCommand,
+  CreateSalesManagerMerchantContractCommand,
+  UpdateSalesManagerMerchantContractCommand,
+  DeleteSalesManagerMerchantContractCommand,
 } from "../commands/exporting.command";
 
 import { CommandBus } from "@nestjs/cqrs";
-import { SalesmanagerMerchantContractQueryService } from "../services/salesmanagermerchantcontractquery.service";
+import { SalesManagerMerchantContractQueryService } from "../services/salesmanagermerchantcontractquery.service";
 
 
-import { SalesmanagerMerchantContractResponse, SalesmanagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
+import { SalesManagerMerchantContractResponse, SalesManagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
 import { FindManyOptions } from "typeorm";
 import { PaginationArgs } from "src/common/dto/args/pagination.args";
 import { fromObject } from "src/utils/functions";
@@ -58,20 +58,20 @@ import { logger } from '@core/logs/logger';
 import { v4 as uuidv4 } from "uuid";
 
 //Definición de tdos
-import { UpdateSalesmanagerMerchantContractDto, 
-CreateOrUpdateSalesmanagerMerchantContractDto, 
-SalesmanagerMerchantContractValueInput, 
-SalesmanagerMerchantContractDto, 
-CreateSalesmanagerMerchantContractDto } from "../dtos/all-dto";
+import { UpdateSalesManagerMerchantContractDto, 
+CreateOrUpdateSalesManagerMerchantContractDto, 
+SalesManagerMerchantContractValueInput, 
+SalesManagerMerchantContractDto, 
+CreateSalesManagerMerchantContractDto } from "../dtos/all-dto";
  
 
 //@UseGuards(JwtGraphQlAuthGuard)
-@Resolver(() => SalesmanagerMerchantContract)
-export class SalesmanagerMerchantContractResolver {
+@Resolver(() => SalesManagerMerchantContract)
+export class SalesManagerMerchantContractResolver {
 
-   //Constructor del resolver de SalesmanagerMerchantContract
+   //Constructor del resolver de SalesManagerMerchantContract
   constructor(
-    private readonly service: SalesmanagerMerchantContractQueryService,
+    private readonly service: SalesManagerMerchantContractQueryService,
     private readonly commandBus: CommandBus
   ) {}
 
@@ -90,16 +90,16 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
   // Mutaciones
-  @Mutation(() => SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>)
-  async createSalesmanagerMerchantContract(
-    @Args("input", { type: () => CreateSalesmanagerMerchantContractDto }) input: CreateSalesmanagerMerchantContractDto
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
-    return this.commandBus.execute(new CreateSalesmanagerMerchantContractCommand(input));
+  @Mutation(() => SalesManagerMerchantContractResponse<SalesManagerMerchantContract>)
+  async createSalesManagerMerchantContract(
+    @Args("input", { type: () => CreateSalesManagerMerchantContractDto }) input: CreateSalesManagerMerchantContractDto
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
+    return this.commandBus.execute(new CreateSalesManagerMerchantContractCommand(input));
   }
 
 
@@ -118,18 +118,18 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
-  @Mutation(() => SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>)
-  async updateSalesmanagerMerchantContract(
+  @Mutation(() => SalesManagerMerchantContractResponse<SalesManagerMerchantContract>)
+  async updateSalesManagerMerchantContract(
     @Args("id", { type: () => String }) id: string,
-    @Args("input") input: UpdateSalesmanagerMerchantContractDto
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+    @Args("input") input: UpdateSalesManagerMerchantContractDto
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     const payLoad = input;
     return this.commandBus.execute(
-      new UpdateSalesmanagerMerchantContractCommand(payLoad, {
+      new UpdateSalesManagerMerchantContractCommand(payLoad, {
         instance: payLoad,
         metadata: {
           initiatedBy: payLoad.createdBy || 'system',
@@ -155,24 +155,24 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
-  @Mutation(() => SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>)
-  async createOrUpdateSalesmanagerMerchantContract(
-    @Args("data", { type: () => CreateOrUpdateSalesmanagerMerchantContractDto })
-    data: CreateOrUpdateSalesmanagerMerchantContractDto
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  @Mutation(() => SalesManagerMerchantContractResponse<SalesManagerMerchantContract>)
+  async createOrUpdateSalesManagerMerchantContract(
+    @Args("data", { type: () => CreateOrUpdateSalesManagerMerchantContractDto })
+    data: CreateOrUpdateSalesManagerMerchantContractDto
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     if (data.id) {
-      const existingSalesmanagerMerchantContract = await this.service.findById(data.id);
-      if (existingSalesmanagerMerchantContract) {
+      const existingSalesManagerMerchantContract = await this.service.findById(data.id);
+      if (existingSalesManagerMerchantContract) {
         return this.commandBus.execute(
-          new UpdateSalesmanagerMerchantContractCommand(data, {
+          new UpdateSalesManagerMerchantContractCommand(data, {
             instance: data,
             metadata: {
               initiatedBy:
-                (data.input as CreateSalesmanagerMerchantContractDto | UpdateSalesmanagerMerchantContractDto).createdBy ||
+                (data.input as CreateSalesManagerMerchantContractDto | UpdateSalesManagerMerchantContractDto).createdBy ||
                 'system',
               correlationId: data.id,
             },
@@ -181,11 +181,11 @@ export class SalesmanagerMerchantContractResolver {
       }
     }
     return this.commandBus.execute(
-      new CreateSalesmanagerMerchantContractCommand(data, {
+      new CreateSalesManagerMerchantContractCommand(data, {
         instance: data,
         metadata: {
           initiatedBy:
-            (data.input as CreateSalesmanagerMerchantContractDto | UpdateSalesmanagerMerchantContractDto).createdBy ||
+            (data.input as CreateSalesManagerMerchantContractDto | UpdateSalesManagerMerchantContractDto).createdBy ||
             'system',
           correlationId: data.id || uuidv4(),
         },
@@ -209,15 +209,15 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
   @Mutation(() => Boolean)
-  async deleteSalesmanagerMerchantContract(
+  async deleteSalesManagerMerchantContract(
     @Args("id", { type: () => String }) id: string
   ): Promise<boolean> {
-    return this.commandBus.execute(new DeleteSalesmanagerMerchantContractCommand(id));
+    return this.commandBus.execute(new DeleteSalesManagerMerchantContractCommand(id));
   }
 
 
@@ -236,16 +236,16 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
   // Queries
-  @Query(() => SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>)
+  @Query(() => SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>)
   async salesmanagermerchantcontracts(
-    options?: FindManyOptions<SalesmanagerMerchantContract>,
+    options?: FindManyOptions<SalesManagerMerchantContract>,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     return this.service.findAll(options, paginationArgs);
   }
 
@@ -265,14 +265,14 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
-  @Query(() => SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>)
+  @Query(() => SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>)
   async salesmanagermerchantcontract(
     @Args("id", { type: () => String }) id: string
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     return this.service.findById(id);
   }
 
@@ -292,17 +292,17 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
-  @Query(() => SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>)
+  @Query(() => SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>)
   async salesmanagermerchantcontractsByField(
     @Args("field", { type: () => String }) field: string,
-    @Args("value", { type: () => SalesmanagerMerchantContractValueInput }) value: SalesmanagerMerchantContractValueInput,
+    @Args("value", { type: () => SalesManagerMerchantContractValueInput }) value: SalesManagerMerchantContractValueInput,
     @Args("page", { type: () => Number, defaultValue: 1 }) page: number,
     @Args("limit", { type: () => Number, defaultValue: 10 }) limit: number
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     return this.service.findByField(
       field,
       value,
@@ -326,15 +326,15 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
-  @Query(() => SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>)
+  @Query(() => SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>)
   async salesmanagermerchantcontractsWithPagination(
     @Args("page", { type: () => Number, defaultValue: 1 }) page: number,
     @Args("limit", { type: () => Number, defaultValue: 10 }) limit: number
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     const paginationArgs = fromObject.call(PaginationArgs, {
       page: page,
       limit: limit,
@@ -358,12 +358,12 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
   @Query(() => Number)
-  async totalSalesmanagerMerchantContracts(): Promise<number> {
+  async totalSalesManagerMerchantContracts(): Promise<number> {
     return this.service.count();
   }
 
@@ -383,15 +383,15 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
-  @Query(() => SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>)
-  async searchSalesmanagerMerchantContracts(
-    @Args("where", { type: () => SalesmanagerMerchantContractDto, nullable: false })
+  @Query(() => SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>)
+  async searchSalesManagerMerchantContracts(
+    @Args("where", { type: () => SalesManagerMerchantContractDto, nullable: false })
     where: Record<string, any>
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     const salesmanagermerchantcontracts = await this.service.findAndCount(where);
     return salesmanagermerchantcontracts;
   }
@@ -412,15 +412,15 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
-  @Query(() => SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>, { nullable: true })
-  async findOneSalesmanagerMerchantContract(
-    @Args("where", { type: () => SalesmanagerMerchantContractDto, nullable: false })
+  @Query(() => SalesManagerMerchantContractResponse<SalesManagerMerchantContract>, { nullable: true })
+  async findOneSalesManagerMerchantContract(
+    @Args("where", { type: () => SalesManagerMerchantContractDto, nullable: false })
     where: Record<string, any>
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     return this.service.findOne(where);
   }
 
@@ -440,15 +440,15 @@ export class SalesmanagerMerchantContractResolver {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractResolver.name)
+      .registerClient(SalesManagerMerchantContractResolver.name)
 
-      .get(SalesmanagerMerchantContractResolver.name),
+      .get(SalesManagerMerchantContractResolver.name),
     })
-  @Query(() => SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>)
-  async findOneSalesmanagerMerchantContractOrFail(
-    @Args("where", { type: () => SalesmanagerMerchantContractDto, nullable: false })
+  @Query(() => SalesManagerMerchantContractResponse<SalesManagerMerchantContract>)
+  async findOneSalesManagerMerchantContractOrFail(
+    @Args("where", { type: () => SalesManagerMerchantContractDto, nullable: false })
     where: Record<string, any>
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract> | Error> {
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract> | Error> {
     return this.service.findOneOrFail(where);
   }
 }

@@ -31,24 +31,24 @@
 
 import { ObjectType, Field } from "@nestjs/graphql";
 import { GQResponseBase } from "src/common/types/common.types";
-import { SalesmanagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
 @ObjectType({ description: "Respuesta de salesmanagermerchantcontract" })
-export class SalesmanagerMerchantContractResponse<T extends SalesmanagerMerchantContract> extends GQResponseBase {
-  @ApiProperty({ type: SalesmanagerMerchantContract,nullable:false,description:"Datos de respuesta de SalesmanagerMerchantContract" })
-  @Field(() => SalesmanagerMerchantContract, { description: "Instancia de SalesmanagerMerchantContract", nullable: true })
+export class SalesManagerMerchantContractResponse<T extends SalesManagerMerchantContract> extends GQResponseBase {
+  @ApiProperty({ type: SalesManagerMerchantContract,nullable:false,description:"Datos de respuesta de SalesManagerMerchantContract" })
+  @Field(() => SalesManagerMerchantContract, { description: "Instancia de SalesManagerMerchantContract", nullable: true })
   data?: T;
 }
 
 @ObjectType({ description: "Respuesta de salesmanagermerchantcontracts" })
-export class SalesmanagerMerchantContractsResponse<T extends SalesmanagerMerchantContract> extends GQResponseBase {
-  @ApiProperty({ type: [SalesmanagerMerchantContract],nullable:false,description:"Listado de SalesmanagerMerchantContract",default:[] })
-  @Field(() => [SalesmanagerMerchantContract], { description: "Listado de SalesmanagerMerchantContract", nullable: false,defaultValue:[] })
+export class SalesManagerMerchantContractsResponse<T extends SalesManagerMerchantContract> extends GQResponseBase {
+  @ApiProperty({ type: [SalesManagerMerchantContract],nullable:false,description:"Listado de SalesManagerMerchantContract",default:[] })
+  @Field(() => [SalesManagerMerchantContract], { description: "Listado de SalesManagerMerchantContract", nullable: false,defaultValue:[] })
   data: T[] = [];
 
-  @ApiProperty({ type: Number,nullable:false,description:"Cantidad de SalesmanagerMerchantContract",default:0 })
-  @Field(() => Number, { description: "Cantidad de SalesmanagerMerchantContract", nullable: false,defaultValue:0 })
+  @ApiProperty({ type: Number,nullable:false,description:"Cantidad de SalesManagerMerchantContract",default:0 })
+  @Field(() => Number, { description: "Cantidad de SalesManagerMerchantContract", nullable: false,defaultValue:0 })
   count: number = 0;
 }
 

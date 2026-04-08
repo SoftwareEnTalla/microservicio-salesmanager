@@ -31,10 +31,10 @@
 
 import { Injectable, Logger, NotFoundException, OnModuleInit } from "@nestjs/common";
 import { FindManyOptions } from "typeorm";
-import { SalesmanagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
 import { BaseEntity } from "../entities/base.entity";
-import { SalesmanagerMerchantContractQueryRepository } from "../repositories/salesmanagermerchantcontractquery.repository";
-import { SalesmanagerMerchantContractResponse, SalesmanagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
+import { SalesManagerMerchantContractQueryRepository } from "../repositories/salesmanagermerchantcontractquery.repository";
+import { SalesManagerMerchantContractResponse, SalesManagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
 import { Helper } from "src/common/helpers/helpers";
 import { PaginationArgs } from "src/common/dto/args/pagination.args";
 //import { Cacheable } from "../decorators/cache.decorator";
@@ -48,12 +48,12 @@ import { logger } from '@core/logs/logger';
 
 
 @Injectable()
-export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
+export class SalesManagerMerchantContractQueryService implements OnModuleInit{
   // Private properties
-  readonly #logger = new Logger(SalesmanagerMerchantContractQueryService.name);
+  readonly #logger = new Logger(SalesManagerMerchantContractQueryService.name);
   private readonly loggerClient = LoggerClient.getInstance();
 
-  constructor(private readonly repository: SalesmanagerMerchantContractQueryRepository,
+  constructor(private readonly repository: SalesManagerMerchantContractQueryRepository,
   private moduleRef: ModuleRef
   ) {
     this.validate();
@@ -74,8 +74,8 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   onModuleInit() {
     //Se ejecuta en la inicialización del módulo
@@ -97,14 +97,14 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   private validate(): void {
     try {
-      const entityInstance = Object.create(SalesmanagerMerchantContract.prototype);
+      const entityInstance = Object.create(SalesManagerMerchantContract.prototype);
       if (!(entityInstance instanceof BaseEntity)) {
-        let sms = `El tipo ${SalesmanagerMerchantContract.name} no extiende de BaseEntity. Asegúrate de que todas las entidades hereden correctamente.`;
+        let sms = `El tipo ${SalesManagerMerchantContract.name} no extiende de BaseEntity. Asegúrate de que todas las entidades hereden correctamente.`;
         logger.info(sms);
         throw new Error(sms);
       }
@@ -130,13 +130,13 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findAll(
-    options?: FindManyOptions<SalesmanagerMerchantContract>,
+    options?: FindManyOptions<SalesManagerMerchantContract>,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const salesmanagermerchantcontracts = await this.repository.findAll(options);
       // Devolver respuesta
@@ -175,10 +175,10 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
-  async findById(id: string): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  async findById(id: string): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
       const salesmanagermerchantcontract = await this.repository.findOne({
         where: { id },
@@ -187,12 +187,12 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!salesmanagermerchantcontract)
         throw new NotFoundException(
-          "SalesmanagerMerchantContract no encontrado para el id solicitado"
+          "SalesManagerMerchantContract no encontrado para el id solicitado"
         );
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContract obtenido con éxito",
+        message: "SalesManagerMerchantContract obtenido con éxito",
         data: salesmanagermerchantcontract,
       };
     } catch (error) {
@@ -220,14 +220,14 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findByField(
     field: string,
     value: any,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const [entities, lenght] = await this.repository.findAndCount({
         where: { [field]: value },
@@ -240,12 +240,12 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entities)
         throw new NotFoundException(
-          "SalesmanagerMerchantContracts no encontrados para la propiedad y valor especificado"
+          "SalesManagerMerchantContracts no encontrados para la propiedad y valor especificado"
         );
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContracts obtenidos con éxito.",
+        message: "SalesManagerMerchantContracts obtenidos con éxito.",
         data: entities,
         pagination: Helper.getPaginator(
           paginationArgs ? paginationArgs.page : 1,
@@ -278,13 +278,13 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findWithPagination(
-    options: FindManyOptions<SalesmanagerMerchantContract>,
+    options: FindManyOptions<SalesManagerMerchantContract>,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const entities = await this.repository.findWithPagination(
         options,
@@ -294,11 +294,11 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
 
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entities)
-        throw new NotFoundException("Entidades SalesmanagerMerchantContracts no encontradas.");
+        throw new NotFoundException("Entidades SalesManagerMerchantContracts no encontradas.");
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContract obtenido con éxito.",
+        message: "SalesManagerMerchantContract obtenido con éxito.",
         data: entities,
         count: entities.length,
       };
@@ -327,8 +327,8 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async count(): Promise<number> {
     return this.repository.count();
@@ -351,13 +351,13 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findAndCount(
     where?: Record<string, any>,
     paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const [entities, lenght] = await this.repository.findAndCount({
         where: where,
@@ -366,12 +366,12 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entities)
         throw new NotFoundException(
-          "Entidades SalesmanagerMerchantContracts no encontradas para el criterio especificado."
+          "Entidades SalesManagerMerchantContracts no encontradas para el criterio especificado."
         );
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContracts obtenidos con éxito.",
+        message: "SalesManagerMerchantContracts obtenidos con éxito.",
         data: entities,
         pagination: Helper.getPaginator(
           paginationArgs ? paginationArgs.page : 1,
@@ -406,10 +406,10 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
-  async findOne(where?: Record<string, any>): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  async findOne(where?: Record<string, any>): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
       const entity = await this.repository.findOne({
         where: where,
@@ -417,11 +417,11 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
 
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entity)
-        throw new NotFoundException("Entidad SalesmanagerMerchantContract no encontrada.");
+        throw new NotFoundException("Entidad SalesManagerMerchantContract no encontrada.");
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContract obtenido con éxito.",
+        message: "SalesManagerMerchantContract obtenido con éxito.",
         data: entity,
       };
     } catch (error) {
@@ -448,12 +448,12 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findOneOrFail(
     where?: Record<string, any>
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract> | Error> {
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract> | Error> {
     try {
       const entity = await this.repository.findOne({
         where: where,
@@ -461,11 +461,11 @@ export class SalesmanagerMerchantContractQueryService implements OnModuleInit{
 
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entity)
-        return new NotFoundException("Entidad SalesmanagerMerchantContract no encontrada.");
+        return new NotFoundException("Entidad SalesManagerMerchantContract no encontrada.");
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContract obtenido con éxito.",
+        message: "SalesManagerMerchantContract obtenido con éxito.",
         data: entity,
       };
     } catch (error) {

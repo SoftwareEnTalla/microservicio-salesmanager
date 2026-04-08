@@ -31,14 +31,14 @@
 
 import { Injectable, Logger, NotFoundException, OnModuleInit } from "@nestjs/common";
 import { DeleteResult, UpdateResult } from "typeorm";
-import { SalesmanagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
-import { CreateSalesmanagerMerchantContractDto, UpdateSalesmanagerMerchantContractDto, DeleteSalesmanagerMerchantContractDto } from "../dtos/all-dto";
+import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
+import { CreateSalesManagerMerchantContractDto, UpdateSalesManagerMerchantContractDto, DeleteSalesManagerMerchantContractDto } from "../dtos/all-dto";
  
 import { generateCacheKey } from "src/utils/functions";
-import { SalesmanagerMerchantContractCommandRepository } from "../repositories/salesmanagermerchantcontractcommand.repository";
-import { SalesmanagerMerchantContractQueryRepository } from "../repositories/salesmanagermerchantcontractquery.repository";
+import { SalesManagerMerchantContractCommandRepository } from "../repositories/salesmanagermerchantcontractcommand.repository";
+import { SalesManagerMerchantContractQueryRepository } from "../repositories/salesmanagermerchantcontractquery.repository";
 import { Cacheable } from "../decorators/cache.decorator";
-import { SalesmanagerMerchantContractResponse, SalesmanagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
+import { SalesManagerMerchantContractResponse, SalesManagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
 import { Helper } from "src/common/helpers/helpers";
 //Logger
 import { LogExecutionTime } from "src/common/logger/loggers.functions";
@@ -49,18 +49,18 @@ import { CommandBus } from "@nestjs/cqrs";
 import { EventStoreService } from "../shared/event-store/event-store.service";
 import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 import { ModuleRef } from "@nestjs/core";
-import { SalesmanagerMerchantContractQueryService } from "./salesmanagermerchantcontractquery.service";
+import { SalesManagerMerchantContractQueryService } from "./salesmanagermerchantcontractquery.service";
 import { BaseEvent } from "../events/base.event";
 
 
 @Injectable()
-export class SalesmanagerMerchantContractCommandService implements OnModuleInit {
+export class SalesManagerMerchantContractCommandService implements OnModuleInit {
   // Private properties
-  readonly #logger = new Logger(SalesmanagerMerchantContractCommandService.name);
-  //Constructo del servicio SalesmanagerMerchantContractCommandService
+  readonly #logger = new Logger(SalesManagerMerchantContractCommandService.name);
+  //Constructo del servicio SalesManagerMerchantContractCommandService
   constructor(
-    private readonly repository: SalesmanagerMerchantContractCommandRepository,
-    private readonly queryRepository: SalesmanagerMerchantContractQueryRepository,
+    private readonly repository: SalesManagerMerchantContractCommandRepository,
+    private readonly queryRepository: SalesManagerMerchantContractQueryRepository,
     private readonly commandBus: CommandBus,
     private readonly eventStore: EventStoreService,
     private readonly eventPublisher: KafkaEventPublisher,
@@ -85,8 +85,8 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   onModuleInit() {
     //Se ejecuta en la inicialización del módulo
@@ -100,7 +100,7 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
     for (const event of events) {
       await this.eventPublisher.publish(event as any);
       if (process.env.EVENT_STORE_ENABLED === "true") {
-        await this.eventStore.appendEvent('salesmanager-merchant-contract-' + event.aggregateId, event);
+        await this.eventStore.appendEvent('sales-manager-merchant-contract-' + event.aggregateId, event);
       }
     }
   }
@@ -108,30 +108,14 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
   private async applyDslServiceRules(
     operation: "create" | "update" | "delete",
     inputData: Record<string, any>,
-    entity?: SalesmanagerMerchantContract | null,
-    current?: SalesmanagerMerchantContract | null,
+    entity?: SalesManagerMerchantContract | null,
+    current?: SalesManagerMerchantContract | null,
     publishEvents: boolean = true,
   ): Promise<void> {
     const entityData = ((entity ?? {}) as Record<string, any>);
     const currentData = ((current ?? {}) as Record<string, any>);
     const pendingEvents: BaseEvent[] = [];
-    if (operation === 'create') {
-      // Regla de servicio: active-contract-must-have-start-date
-      // Todo contrato activo debe registrar fecha de inicio.
-      if (!(this.dslValue(entityData, currentData, inputData, 'status') !== 'ACTIVE' && !(this.dslValue(entityData, currentData, inputData, 'startsAt') === undefined || this.dslValue(entityData, currentData, inputData, 'startsAt') === null || (typeof this.dslValue(entityData, currentData, inputData, 'startsAt') === 'string' && String(this.dslValue(entityData, currentData, inputData, 'startsAt')).trim() === '') || (Array.isArray(this.dslValue(entityData, currentData, inputData, 'startsAt')) && this.dslValue(entityData, currentData, inputData, 'startsAt').length === 0) || (typeof this.dslValue(entityData, currentData, inputData, 'startsAt') === 'object' && !Array.isArray(this.dslValue(entityData, currentData, inputData, 'startsAt')) && Object.prototype.toString.call(this.dslValue(entityData, currentData, inputData, 'startsAt')) === '[object Object]' && Object.keys(Object(this.dslValue(entityData, currentData, inputData, 'startsAt'))).length === 0)))) {
-        throw new Error('SALESMANAGER_CONTRACT_001: El contrato activo debe tener fecha de inicio');
-      }
 
-    }
-
-    if (operation === 'update') {
-      // Regla de servicio: active-contract-must-have-start-date
-      // Todo contrato activo debe registrar fecha de inicio.
-      if (!(this.dslValue(entityData, currentData, inputData, 'status') !== 'ACTIVE' && !(this.dslValue(entityData, currentData, inputData, 'startsAt') === undefined || this.dslValue(entityData, currentData, inputData, 'startsAt') === null || (typeof this.dslValue(entityData, currentData, inputData, 'startsAt') === 'string' && String(this.dslValue(entityData, currentData, inputData, 'startsAt')).trim() === '') || (Array.isArray(this.dslValue(entityData, currentData, inputData, 'startsAt')) && this.dslValue(entityData, currentData, inputData, 'startsAt').length === 0) || (typeof this.dslValue(entityData, currentData, inputData, 'startsAt') === 'object' && !Array.isArray(this.dslValue(entityData, currentData, inputData, 'startsAt')) && Object.prototype.toString.call(this.dslValue(entityData, currentData, inputData, 'startsAt')) === '[object Object]' && Object.keys(Object(this.dslValue(entityData, currentData, inputData, 'startsAt'))).length === 0)))) {
-        throw new Error('SALESMANAGER_CONTRACT_001: El contrato activo debe tener fecha de inicio');
-      }
-
-    }
     if (publishEvents) {
       await this.publishDslDomainEvents(pendingEvents);
     }
@@ -152,31 +136,31 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandService.name)
-      .get(SalesmanagerMerchantContractCommandService.name),
+      .registerClient(SalesManagerMerchantContractCommandService.name)
+      .get(SalesManagerMerchantContractCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<CreateSalesmanagerMerchantContractDto>("createSalesmanagerMerchantContract", args[0], args[1]),
+      generateCacheKey<CreateSalesManagerMerchantContractDto>("createSalesManagerMerchantContract", args[0], args[1]),
     ttl: 60,
   })
   async create(
-    createSalesmanagerMerchantContractDtoInput: CreateSalesmanagerMerchantContractDto
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+    createSalesManagerMerchantContractDtoInput: CreateSalesManagerMerchantContractDto
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
-      logger.info("Receiving in service:", createSalesmanagerMerchantContractDtoInput);
-      const candidate = SalesmanagerMerchantContract.fromDto(createSalesmanagerMerchantContractDtoInput);
-      await this.applyDslServiceRules("create", createSalesmanagerMerchantContractDtoInput as Record<string, any>, candidate, null, false);
+      logger.info("Receiving in service:", createSalesManagerMerchantContractDtoInput);
+      const candidate = SalesManagerMerchantContract.fromDto(createSalesManagerMerchantContractDtoInput);
+      await this.applyDslServiceRules("create", createSalesManagerMerchantContractDtoInput as Record<string, any>, candidate, null, false);
       const entity = await this.repository.create(candidate);
-      await this.applyDslServiceRules("create", createSalesmanagerMerchantContractDtoInput as Record<string, any>, entity, null, true);
+      await this.applyDslServiceRules("create", createSalesManagerMerchantContractDtoInput as Record<string, any>, entity, null, true);
       logger.info("Entity created on service:", entity);
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entity)
-        throw new NotFoundException("Entidad SalesmanagerMerchantContract no encontrada.");
+        throw new NotFoundException("Entidad SalesManagerMerchantContract no encontrada.");
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContract obtenido con éxito.",
+        message: "SalesManagerMerchantContract obtenido con éxito.",
         data: entity,
       };
     } catch (error) {
@@ -204,29 +188,29 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandService.name)
-      .get(SalesmanagerMerchantContractCommandService.name),
+      .registerClient(SalesManagerMerchantContractCommandService.name)
+      .get(SalesManagerMerchantContractCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<SalesmanagerMerchantContract>("createSalesmanagerMerchantContracts", args[0], args[1]),
+      generateCacheKey<SalesManagerMerchantContract>("createSalesManagerMerchantContracts", args[0], args[1]),
     ttl: 60,
   })
   async bulkCreate(
-    createSalesmanagerMerchantContractDtosInput: CreateSalesmanagerMerchantContractDto[]
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+    createSalesManagerMerchantContractDtosInput: CreateSalesManagerMerchantContractDto[]
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const entities = await this.repository.bulkCreate(
-        createSalesmanagerMerchantContractDtosInput.map((entity) => SalesmanagerMerchantContract.fromDto(entity))
+        createSalesManagerMerchantContractDtosInput.map((entity) => SalesManagerMerchantContract.fromDto(entity))
       );
 
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entities)
-        throw new NotFoundException("Entidades SalesmanagerMerchantContracts no encontradas.");
+        throw new NotFoundException("Entidades SalesManagerMerchantContracts no encontradas.");
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContracts creados con éxito.",
+        message: "SalesManagerMerchantContracts creados con éxito.",
         data: entities,
         count: entities.length,
       };
@@ -254,21 +238,21 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandService.name)
-      .get(SalesmanagerMerchantContractCommandService.name),
+      .registerClient(SalesManagerMerchantContractCommandService.name)
+      .get(SalesManagerMerchantContractCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<UpdateSalesmanagerMerchantContractDto>("updateSalesmanagerMerchantContract", args[0], args[1]),
+      generateCacheKey<UpdateSalesManagerMerchantContractDto>("updateSalesManagerMerchantContract", args[0], args[1]),
     ttl: 60,
   })
   async update(
     id: string,
-    partialEntity: UpdateSalesmanagerMerchantContractDto
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+    partialEntity: UpdateSalesManagerMerchantContractDto
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
       const currentEntity = await this.queryRepository.findById(id);
-      const candidate = Object.assign(new SalesmanagerMerchantContract(), currentEntity ?? {}, partialEntity);
+      const candidate = Object.assign(new SalesManagerMerchantContract(), currentEntity ?? {}, partialEntity);
       await this.applyDslServiceRules("update", partialEntity as Record<string, any>, candidate, currentEntity, false);
       const entity = await this.repository.update(
         id,
@@ -277,11 +261,11 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       await this.applyDslServiceRules("update", partialEntity as Record<string, any>, entity, currentEntity, true);
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entity)
-        throw new NotFoundException("Entidades SalesmanagerMerchantContracts no encontradas.");
+        throw new NotFoundException("Entidades SalesManagerMerchantContracts no encontradas.");
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContract actualizada con éxito.",
+        message: "SalesManagerMerchantContract actualizada con éxito.",
         data: entity,
       };
     } catch (error) {
@@ -308,28 +292,28 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandService.name)
-      .get(SalesmanagerMerchantContractCommandService.name),
+      .registerClient(SalesManagerMerchantContractCommandService.name)
+      .get(SalesManagerMerchantContractCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<UpdateSalesmanagerMerchantContractDto>("updateSalesmanagerMerchantContracts", args[0]),
+      generateCacheKey<UpdateSalesManagerMerchantContractDto>("updateSalesManagerMerchantContracts", args[0]),
     ttl: 60,
   })
   async bulkUpdate(
-    partialEntity: UpdateSalesmanagerMerchantContractDto[]
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+    partialEntity: UpdateSalesManagerMerchantContractDto[]
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const entities = await this.repository.bulkUpdate(
-        partialEntity.map((entity) => SalesmanagerMerchantContract.fromDto(entity))
+        partialEntity.map((entity) => SalesManagerMerchantContract.fromDto(entity))
       );
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entities)
-        throw new NotFoundException("Entidades SalesmanagerMerchantContracts no encontradas.");
+        throw new NotFoundException("Entidades SalesManagerMerchantContracts no encontradas.");
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "SalesmanagerMerchantContracts actualizadas con éxito.",
+        message: "SalesManagerMerchantContracts actualizadas con éxito.",
         data: entities,
         count: entities.length,
       };
@@ -356,20 +340,20 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandService.name)
-      .get(SalesmanagerMerchantContractCommandService.name),
+      .registerClient(SalesManagerMerchantContractCommandService.name)
+      .get(SalesManagerMerchantContractCommandService.name),
   })
   @Cacheable({
     key: (args) =>
-      generateCacheKey<DeleteSalesmanagerMerchantContractDto>("deleteSalesmanagerMerchantContract", args[0], args[1]),
+      generateCacheKey<DeleteSalesManagerMerchantContractDto>("deleteSalesManagerMerchantContract", args[0], args[1]),
     ttl: 60,
   })
-  async delete(id: string): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  async delete(id: string): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
       const entity = await this.queryRepository.findById(id);
       // Respuesta si el salesmanagermerchantcontract no existe
       if (!entity)
-        throw new NotFoundException("Instancias de SalesmanagerMerchantContract no encontradas.");
+        throw new NotFoundException("Instancias de SalesManagerMerchantContract no encontradas.");
 
       await this.applyDslServiceRules("delete", { id }, entity, entity, false);
 
@@ -378,7 +362,7 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       // Devolver salesmanagermerchantcontract
       return {
         ok: true,
-        message: "Instancia de SalesmanagerMerchantContract eliminada con éxito.",
+        message: "Instancia de SalesManagerMerchantContract eliminada con éxito.",
         data: entity,
       };
     } catch (error) {
@@ -404,11 +388,11 @@ export class SalesmanagerMerchantContractCommandService implements OnModuleInit 
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandService.name)
-      .get(SalesmanagerMerchantContractCommandService.name),
+      .registerClient(SalesManagerMerchantContractCommandService.name)
+      .get(SalesManagerMerchantContractCommandService.name),
   })
   @Cacheable({
-    key: (args) => generateCacheKey<string[]>("deleteSalesmanagerMerchantContracts", args[0]),
+    key: (args) => generateCacheKey<string[]>("deleteSalesManagerMerchantContracts", args[0]),
     ttl: 60,
   })
   async bulkDelete(ids: string[]): Promise<DeleteResult> {

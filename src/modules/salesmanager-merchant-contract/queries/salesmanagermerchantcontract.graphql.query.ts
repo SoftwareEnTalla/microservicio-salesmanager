@@ -29,26 +29,26 @@
  */
 
 import { Query, Resolver, Args } from '@nestjs/graphql'; 
-import { SalesmanagerMerchantContractDto } from '../dtos/all-dto';
-import { SalesmanagerMerchantContractGraphqlService } from '../services/salesmanagermerchantcontract.graphql.service';
+import { SalesManagerMerchantContractDto } from '../dtos/all-dto';
+import { SalesManagerMerchantContractGraphqlService } from '../services/salesmanagermerchantcontract.graphql.service';
 import { NotFoundException } from '@nestjs/common';
 
-@Resolver(() => SalesmanagerMerchantContractDto)
-export class SalesmanagerMerchantContractGraphqlQuery {
-  constructor(private readonly service: SalesmanagerMerchantContractGraphqlService) {}
+@Resolver(() => SalesManagerMerchantContractDto)
+export class SalesManagerMerchantContractGraphqlQuery {
+  constructor(private readonly service: SalesManagerMerchantContractGraphqlService) {}
 
-  @Query(() => [SalesmanagerMerchantContractDto], { name: 'findAllSalesmanagerMerchantContracts' })
-  async findAll(): Promise<SalesmanagerMerchantContractDto[]> {
+  @Query(() => [SalesManagerMerchantContractDto], { name: 'findAllSalesManagerMerchantContracts' })
+  async findAll(): Promise<SalesManagerMerchantContractDto[]> {
     return this.service.findAll();
   }
 
-  @Query(() => SalesmanagerMerchantContractDto, { name: 'findSalesmanagerMerchantContractById' })
+  @Query(() => SalesManagerMerchantContractDto, { name: 'findSalesManagerMerchantContractById' })
   async findById(
     @Args('id', { type: () => String }) id: string
-  ): Promise<SalesmanagerMerchantContractDto> {
+  ): Promise<SalesManagerMerchantContractDto> {
     const result = await this.service.findById(id);
     if (!result) {
-      throw new NotFoundException("SalesmanagerMerchantContract con id " + id + " no encontrado");
+      throw new NotFoundException("SalesManagerMerchantContract con id " + id + " no encontrado");
     }
     return result;
   }

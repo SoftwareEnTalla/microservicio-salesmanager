@@ -30,33 +30,33 @@
 
 
 import { Module } from "@nestjs/common";
-import { SalesmanagerMerchantContractCommandController } from "../controllers/salesmanagermerchantcontractcommand.controller";
-import { SalesmanagerMerchantContractQueryController } from "../controllers/salesmanagermerchantcontractquery.controller";
-import { SalesmanagerMerchantContractCommandService } from "../services/salesmanagermerchantcontractcommand.service";
-import { SalesmanagerMerchantContractQueryService } from "../services/salesmanagermerchantcontractquery.service";
-import { SalesmanagerMerchantContractCommandRepository } from "../repositories/salesmanagermerchantcontractcommand.repository";
-import { SalesmanagerMerchantContractQueryRepository } from "../repositories/salesmanagermerchantcontractquery.repository";
-import { SalesmanagerMerchantContractRepository } from "../repositories/salesmanagermerchantcontract.repository";
-import { SalesmanagerMerchantContractResolver } from "../graphql/salesmanagermerchantcontract.resolver";
-import { SalesmanagerMerchantContractAuthGuard } from "../guards/salesmanagermerchantcontractauthguard.guard";
+import { SalesManagerMerchantContractCommandController } from "../controllers/salesmanagermerchantcontractcommand.controller";
+import { SalesManagerMerchantContractQueryController } from "../controllers/salesmanagermerchantcontractquery.controller";
+import { SalesManagerMerchantContractCommandService } from "../services/salesmanagermerchantcontractcommand.service";
+import { SalesManagerMerchantContractQueryService } from "../services/salesmanagermerchantcontractquery.service";
+import { SalesManagerMerchantContractCommandRepository } from "../repositories/salesmanagermerchantcontractcommand.repository";
+import { SalesManagerMerchantContractQueryRepository } from "../repositories/salesmanagermerchantcontractquery.repository";
+import { SalesManagerMerchantContractRepository } from "../repositories/salesmanagermerchantcontract.repository";
+import { SalesManagerMerchantContractResolver } from "../graphql/salesmanagermerchantcontract.resolver";
+import { SalesManagerMerchantContractAuthGuard } from "../guards/salesmanagermerchantcontractauthguard.guard";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { SalesmanagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
 import { BaseEntity } from "../entities/base.entity";
 import { CacheModule } from "@nestjs/cache-manager";
 import { CqrsModule } from "@nestjs/cqrs";
 import { KafkaModule } from "./kafka.module";
-import { CreateSalesmanagerMerchantContractHandler } from "../commands/handlers/createsalesmanagermerchantcontract.handler";
-import { UpdateSalesmanagerMerchantContractHandler } from "../commands/handlers/updatesalesmanagermerchantcontract.handler";
-import { DeleteSalesmanagerMerchantContractHandler } from "../commands/handlers/deletesalesmanagermerchantcontract.handler";
-import { GetSalesmanagerMerchantContractByIdHandler } from "../queries/handlers/getsalesmanagermerchantcontractbyid.handler";
-import { GetSalesmanagerMerchantContractByFieldHandler } from "../queries/handlers/getsalesmanagermerchantcontractbyfield.handler";
-import { GetAllSalesmanagerMerchantContractHandler } from "../queries/handlers/getallsalesmanagermerchantcontract.handler";
-import { SalesmanagerMerchantContractCrudSaga } from "../sagas/salesmanagermerchantcontract-crud.saga";
+import { CreateSalesManagerMerchantContractHandler } from "../commands/handlers/createsalesmanagermerchantcontract.handler";
+import { UpdateSalesManagerMerchantContractHandler } from "../commands/handlers/updatesalesmanagermerchantcontract.handler";
+import { DeleteSalesManagerMerchantContractHandler } from "../commands/handlers/deletesalesmanagermerchantcontract.handler";
+import { GetSalesManagerMerchantContractByIdHandler } from "../queries/handlers/getsalesmanagermerchantcontractbyid.handler";
+import { GetSalesManagerMerchantContractByFieldHandler } from "../queries/handlers/getsalesmanagermerchantcontractbyfield.handler";
+import { GetAllSalesManagerMerchantContractHandler } from "../queries/handlers/getallsalesmanagermerchantcontract.handler";
+import { SalesManagerMerchantContractCrudSaga } from "../sagas/salesmanagermerchantcontract-crud.saga";
 import { EVENT_TOPICS } from "../events/event-registry";
 
 //Interceptors
-import { SalesmanagerMerchantContractInterceptor } from "../interceptors/salesmanagermerchantcontract.interceptor";
-import { SalesmanagerMerchantContractLoggingInterceptor } from "../interceptors/salesmanagermerchantcontract.logging.interceptor";
+import { SalesManagerMerchantContractInterceptor } from "../interceptors/salesmanagermerchantcontract.interceptor";
+import { SalesManagerMerchantContractLoggingInterceptor } from "../interceptors/salesmanagermerchantcontract.logging.interceptor";
 
 //Event-Sourcing dependencies
 import { EventStoreService } from "../shared/event-store/event-store.service";
@@ -65,34 +65,34 @@ import { EventStoreService } from "../shared/event-store/event-store.service";
   imports: [
     CqrsModule,
     KafkaModule,
-    TypeOrmModule.forFeature([BaseEntity, SalesmanagerMerchantContract]), // Incluir BaseEntity para herencia
+    TypeOrmModule.forFeature([BaseEntity, SalesManagerMerchantContract]), // Incluir BaseEntity para herencia
     CacheModule.register(), // Importa el módulo de caché
   ],
-  controllers: [SalesmanagerMerchantContractCommandController, SalesmanagerMerchantContractQueryController],
+  controllers: [SalesManagerMerchantContractCommandController, SalesManagerMerchantContractQueryController],
   providers: [
     //Services
     EventStoreService,
-    SalesmanagerMerchantContractQueryService,
-    SalesmanagerMerchantContractCommandService,
+    SalesManagerMerchantContractQueryService,
+    SalesManagerMerchantContractCommandService,
     //Repositories
-    SalesmanagerMerchantContractCommandRepository,
-    SalesmanagerMerchantContractQueryRepository,
-    SalesmanagerMerchantContractRepository,      
+    SalesManagerMerchantContractCommandRepository,
+    SalesManagerMerchantContractQueryRepository,
+    SalesManagerMerchantContractRepository,      
     //Resolvers
-    SalesmanagerMerchantContractResolver,
+    SalesManagerMerchantContractResolver,
     //Guards
-    SalesmanagerMerchantContractAuthGuard,
+    SalesManagerMerchantContractAuthGuard,
     //Interceptors
-    SalesmanagerMerchantContractInterceptor,
-    SalesmanagerMerchantContractLoggingInterceptor,
+    SalesManagerMerchantContractInterceptor,
+    SalesManagerMerchantContractLoggingInterceptor,
     //CQRS Handlers
-    CreateSalesmanagerMerchantContractHandler,
-    UpdateSalesmanagerMerchantContractHandler,
-    DeleteSalesmanagerMerchantContractHandler,
-    GetSalesmanagerMerchantContractByIdHandler,
-    GetSalesmanagerMerchantContractByFieldHandler,
-    GetAllSalesmanagerMerchantContractHandler,
-    SalesmanagerMerchantContractCrudSaga,
+    CreateSalesManagerMerchantContractHandler,
+    UpdateSalesManagerMerchantContractHandler,
+    DeleteSalesManagerMerchantContractHandler,
+    GetSalesManagerMerchantContractByIdHandler,
+    GetSalesManagerMerchantContractByFieldHandler,
+    GetAllSalesManagerMerchantContractHandler,
+    SalesManagerMerchantContractCrudSaga,
     //Configurations
     {
       provide: 'EVENT_SOURCING_CONFIG',
@@ -111,20 +111,20 @@ import { EventStoreService } from "../shared/event-store/event-store.service";
     KafkaModule,
     //Services
     EventStoreService,
-    SalesmanagerMerchantContractQueryService,
-    SalesmanagerMerchantContractCommandService,
+    SalesManagerMerchantContractQueryService,
+    SalesManagerMerchantContractCommandService,
     //Repositories
-    SalesmanagerMerchantContractCommandRepository,
-    SalesmanagerMerchantContractQueryRepository,
-    SalesmanagerMerchantContractRepository,      
+    SalesManagerMerchantContractCommandRepository,
+    SalesManagerMerchantContractQueryRepository,
+    SalesManagerMerchantContractRepository,      
     //Resolvers
-    SalesmanagerMerchantContractResolver,
+    SalesManagerMerchantContractResolver,
     //Guards
-    SalesmanagerMerchantContractAuthGuard,
+    SalesManagerMerchantContractAuthGuard,
     //Interceptors
-    SalesmanagerMerchantContractInterceptor,
-    SalesmanagerMerchantContractLoggingInterceptor,
+    SalesManagerMerchantContractInterceptor,
+    SalesManagerMerchantContractLoggingInterceptor,
   ],
 })
-export class SalesmanagerMerchantContractModule {}
+export class SalesManagerMerchantContractModule {}
 

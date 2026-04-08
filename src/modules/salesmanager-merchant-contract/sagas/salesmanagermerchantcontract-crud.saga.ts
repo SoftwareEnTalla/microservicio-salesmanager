@@ -33,23 +33,23 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Saga, CommandBus, EventBus, ofType } from '@nestjs/cqrs';
 import { Observable, map, tap } from 'rxjs';
 import {
-  SalesmanagerMerchantContractCreatedEvent,
-  SalesmanagerMerchantContractUpdatedEvent,
-  SalesmanagerMerchantContractDeletedEvent,
+  SalesManagerMerchantContractCreatedEvent,
+  SalesManagerMerchantContractUpdatedEvent,
+  SalesManagerMerchantContractDeletedEvent,
 
 } from '../events/exporting.event';
 import {
-  SagaSalesmanagerMerchantContractFailedEvent
+  SagaSalesManagerMerchantContractFailedEvent
 } from '../events/salesmanagermerchantcontract-failed.event';
 import {
-  CreateSalesmanagerMerchantContractCommand,
-  UpdateSalesmanagerMerchantContractCommand,
-  DeleteSalesmanagerMerchantContractCommand
+  CreateSalesManagerMerchantContractCommand,
+  UpdateSalesManagerMerchantContractCommand,
+  DeleteSalesManagerMerchantContractCommand
 } from '../commands/exporting.command';
 
 @Injectable()
-export class SalesmanagerMerchantContractCrudSaga {
-  private readonly logger = new Logger(SalesmanagerMerchantContractCrudSaga.name);
+export class SalesManagerMerchantContractCrudSaga {
+  private readonly logger = new Logger(SalesManagerMerchantContractCrudSaga.name);
 
   constructor(
     private readonly commandBus: CommandBus,
@@ -58,11 +58,11 @@ export class SalesmanagerMerchantContractCrudSaga {
 
   // Reacción a evento de creación
   @Saga()
-  onSalesmanagerMerchantContractCreated = ($events: Observable<SalesmanagerMerchantContractCreatedEvent>) => {
+  onSalesManagerMerchantContractCreated = ($events: Observable<SalesManagerMerchantContractCreatedEvent>) => {
     return $events.pipe(
-      ofType(SalesmanagerMerchantContractCreatedEvent),
+      ofType(SalesManagerMerchantContractCreatedEvent),
       tap(event => {
-        this.logger.log(`Saga iniciada para creación de SalesmanagerMerchantContract: ${event.aggregateId}`);
+        this.logger.log(`Saga iniciada para creación de SalesManagerMerchantContract: ${event.aggregateId}`);
         // Lógica post-creación (ej: enviar notificación)
       }),
       map(event => {
@@ -74,11 +74,11 @@ export class SalesmanagerMerchantContractCrudSaga {
 
   // Reacción a evento de actualización
   @Saga()
-  onSalesmanagerMerchantContractUpdated = ($events: Observable<SalesmanagerMerchantContractUpdatedEvent>) => {
+  onSalesManagerMerchantContractUpdated = ($events: Observable<SalesManagerMerchantContractUpdatedEvent>) => {
     return $events.pipe(
-      ofType(SalesmanagerMerchantContractUpdatedEvent),
+      ofType(SalesManagerMerchantContractUpdatedEvent),
       tap(event => {
-        this.logger.log(`Saga iniciada para actualización de SalesmanagerMerchantContract: ${event.aggregateId}`);
+        this.logger.log(`Saga iniciada para actualización de SalesManagerMerchantContract: ${event.aggregateId}`);
         // Lógica post-actualización (ej: actualizar caché)
       })
     );
@@ -86,11 +86,11 @@ export class SalesmanagerMerchantContractCrudSaga {
 
   // Reacción a evento de eliminación
   @Saga()
-  onSalesmanagerMerchantContractDeleted = ($events: Observable<SalesmanagerMerchantContractDeletedEvent>) => {
+  onSalesManagerMerchantContractDeleted = ($events: Observable<SalesManagerMerchantContractDeletedEvent>) => {
     return $events.pipe(
-      ofType(SalesmanagerMerchantContractDeletedEvent),
+      ofType(SalesManagerMerchantContractDeletedEvent),
       tap(event => {
-        this.logger.log(`Saga iniciada para eliminación de SalesmanagerMerchantContract: ${event.aggregateId}`);
+        this.logger.log(`Saga iniciada para eliminación de SalesManagerMerchantContract: ${event.aggregateId}`);
         // Lógica post-eliminación (ej: limpiar relaciones)
       }),
       map(event => {
@@ -105,6 +105,6 @@ export class SalesmanagerMerchantContractCrudSaga {
   // Método para manejo de errores en sagas
   private handleSagaError(error: Error, event: any) {
     this.logger.error(`Error en saga para evento ${event.constructor.name}: ${error.message}`);
-    this.eventBus.publish(new SagaSalesmanagerMerchantContractFailedEvent( error,event));
+    this.eventBus.publish(new SagaSalesManagerMerchantContractFailedEvent( error,event));
   }
 }

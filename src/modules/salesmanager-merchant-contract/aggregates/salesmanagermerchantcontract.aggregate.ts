@@ -32,7 +32,7 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { BaseEntity } from '../entities/base.entity';
 
-export class SalesmanagerMerchantContractAggregate extends AggregateRoot {
+export class SalesManagerMerchantContractAggregate extends AggregateRoot {
   private state!: BaseEntity;
 
   constructor() {

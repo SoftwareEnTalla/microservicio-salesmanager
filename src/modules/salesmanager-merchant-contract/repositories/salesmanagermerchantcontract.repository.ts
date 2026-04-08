@@ -41,7 +41,7 @@
 } from 'typeorm';
  
   import { BaseEntity } from '../entities/base.entity';
-  import { SalesManagerMerchantContract } from '../entities/salesmanager-merchant-contract.entity';
+  import { SalesManagerMerchantContract } from '../entities/sales-manager-merchant-contract.entity';
   import { Cacheable } from '../decorators/cache.decorator';
   import { generateCacheKey } from 'src/utils/functions';
 

@@ -41,14 +41,14 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from "@nestjs/swagger";
-import { SalesmanagerMerchantContractCommandService } from "../services/salesmanagermerchantcontractcommand.service";
+import { SalesManagerMerchantContractCommandService } from "../services/salesmanagermerchantcontractcommand.service";
 
 import { DeleteResult } from "typeorm";
 import { Logger } from "@nestjs/common";
 import { Helper } from "src/common/helpers/helpers";
-import { SalesmanagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
-import { SalesmanagerMerchantContractResponse, SalesmanagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
-import { CreateSalesmanagerMerchantContractDto, UpdateSalesmanagerMerchantContractDto } from "../dtos/all-dto"; 
+import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
+import { SalesManagerMerchantContractResponse, SalesManagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
+import { CreateSalesManagerMerchantContractDto, UpdateSalesManagerMerchantContractDto } from "../dtos/all-dto"; 
 
 //Loggers
 import { LoggerClient } from "src/common/logger/logger.client";
@@ -58,19 +58,19 @@ import { logger } from '@core/logs/logger';
 import { BadRequestException } from "@nestjs/common";
 
 import { CommandBus } from "@nestjs/cqrs";
-//import { SalesmanagerMerchantContractCreatedEvent } from "../events/salesmanagermerchantcontractcreated.event";
+//import { SalesManagerMerchantContractCreatedEvent } from "../events/salesmanagermerchantcontractcreated.event";
 import { EventStoreService } from "../shared/event-store/event-store.service";
 import { KafkaEventPublisher } from "../shared/adapters/kafka-event-publisher";
 
-@ApiTags("SalesmanagerMerchantContract Command")
+@ApiTags("SalesManagerMerchantContract Command")
 @Controller("salesmanagermerchantcontracts/command")
-export class SalesmanagerMerchantContractCommandController {
+export class SalesManagerMerchantContractCommandController {
 
-  #logger = new Logger(SalesmanagerMerchantContractCommandController.name);
+  #logger = new Logger(SalesManagerMerchantContractCommandController.name);
 
-  //Constructor del controlador: SalesmanagerMerchantContractCommandController
+  //Constructor del controlador: SalesManagerMerchantContractCommandController
   constructor(
-  private readonly service: SalesmanagerMerchantContractCommandService,
+  private readonly service: SalesManagerMerchantContractCommandService,
   private readonly commandBus: CommandBus,
   private readonly eventStore: EventStoreService,
   private readonly eventPublisher: KafkaEventPublisher
@@ -79,8 +79,8 @@ export class SalesmanagerMerchantContractCommandController {
   }
 
   @ApiOperation({ summary: "Create a new salesmanagermerchantcontract" })
-  @ApiBody({ type: CreateSalesmanagerMerchantContractDto })
-  @ApiResponse({ status: 201, type: SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract> })
+  @ApiBody({ type: CreateSalesManagerMerchantContractDto })
+  @ApiResponse({ status: 201, type: SalesManagerMerchantContractResponse<SalesManagerMerchantContract> })
   @Post()
   @LogExecutionTime({
     layer: "controller",
@@ -97,20 +97,20 @@ export class SalesmanagerMerchantContractCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandController.name)
-      .get(SalesmanagerMerchantContractCommandController.name),
+      .registerClient(SalesManagerMerchantContractCommandController.name)
+      .get(SalesManagerMerchantContractCommandController.name),
   })
   async create(
-    @Body() createSalesmanagerMerchantContractDtoInput: CreateSalesmanagerMerchantContractDto
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+    @Body() createSalesManagerMerchantContractDtoInput: CreateSalesManagerMerchantContractDto
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
-      logger.info("Receiving in controller:", createSalesmanagerMerchantContractDtoInput);
-      const entity = await this.service.create(createSalesmanagerMerchantContractDtoInput);
+      logger.info("Receiving in controller:", createSalesManagerMerchantContractDtoInput);
+      const entity = await this.service.create(createSalesManagerMerchantContractDtoInput);
       logger.info("Entity created on controller:", entity);
       if (!entity) {
         throw new NotFoundException("Response salesmanagermerchantcontract entity not found.");
       } else if (!entity.data) {
-        throw new NotFoundException("SalesmanagerMerchantContract entity not found on response.");
+        throw new NotFoundException("SalesManagerMerchantContract entity not found on response.");
       } else if (!entity.data.id) {
         throw new NotFoundException("Id salesmanagermerchantcontract is null on order instance.");
       }     
@@ -126,8 +126,8 @@ export class SalesmanagerMerchantContractCommandController {
   
   
   @ApiOperation({ summary: "Create multiple salesmanagermerchantcontracts" })
-  @ApiBody({ type: [CreateSalesmanagerMerchantContractDto] })
-  @ApiResponse({ status: 201, type: SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract> })
+  @ApiBody({ type: [CreateSalesManagerMerchantContractDto] })
+  @ApiResponse({ status: 201, type: SalesManagerMerchantContractsResponse<SalesManagerMerchantContract> })
   @Post("bulk")
   @LogExecutionTime({
     layer: "controller",
@@ -144,17 +144,17 @@ export class SalesmanagerMerchantContractCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandController.name)
-      .get(SalesmanagerMerchantContractCommandController.name),
+      .registerClient(SalesManagerMerchantContractCommandController.name)
+      .get(SalesManagerMerchantContractCommandController.name),
   })
   async bulkCreate(
-    @Body() createSalesmanagerMerchantContractDtosInput: CreateSalesmanagerMerchantContractDto[]
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+    @Body() createSalesManagerMerchantContractDtosInput: CreateSalesManagerMerchantContractDto[]
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
-      const entities = await this.service.bulkCreate(createSalesmanagerMerchantContractDtosInput);
+      const entities = await this.service.bulkCreate(createSalesManagerMerchantContractDtosInput);
 
       if (!entities) {
-        throw new NotFoundException("SalesmanagerMerchantContract entities not found.");
+        throw new NotFoundException("SalesManagerMerchantContract entities not found.");
       }
 
       return entities;
@@ -172,14 +172,14 @@ export class SalesmanagerMerchantContractCommandController {
     description: "Identificador desde la url del endpoint",
   }) // ✅ Documentamos el ID de la URL
   @ApiBody({
-    type: UpdateSalesmanagerMerchantContractDto,
+    type: UpdateSalesManagerMerchantContractDto,
     description: "El Payload debe incluir el mismo ID de la URL",
   })
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract> })
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractResponse<SalesManagerMerchantContract> })
   @ApiResponse({
     status: 400,
     description:
-      "EL ID en la URL no coincide con la instancia SalesmanagerMerchantContract a actualizar.",
+      "EL ID en la URL no coincide con la instancia SalesManagerMerchantContract a actualizar.",
   }) // ✅ Nuevo status para el error de validación
   @Put(":id")
   @LogExecutionTime({
@@ -197,26 +197,26 @@ export class SalesmanagerMerchantContractCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandController.name)
-      .get(SalesmanagerMerchantContractCommandController.name),
+      .registerClient(SalesManagerMerchantContractCommandController.name)
+      .get(SalesManagerMerchantContractCommandController.name),
   })
   async update(
     @Param("id") id: string,
     @Body() body: any
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
       // Permitir body plano o anidado en 'data'
       const partialEntity = body?.data ? body.data : body;
       // ✅ Validación de coincidencia de IDs
       if (id !== partialEntity.id) {
         throw new BadRequestException(
-          "El ID en la URL no coincide con el ID en la instancia de SalesmanagerMerchantContract a actualizar."
+          "El ID en la URL no coincide con el ID en la instancia de SalesManagerMerchantContract a actualizar."
         );
       }
       const entity = await this.service.update(id, partialEntity);
 
       if (!entity) {
-        throw new NotFoundException("Instancia de SalesmanagerMerchantContract no encontrada.");
+        throw new NotFoundException("Instancia de SalesManagerMerchantContract no encontrada.");
       }
 
       return entity;
@@ -229,8 +229,8 @@ export class SalesmanagerMerchantContractCommandController {
   
   
   @ApiOperation({ summary: "Update multiple salesmanagermerchantcontracts" })
-  @ApiBody({ type: [UpdateSalesmanagerMerchantContractDto] })
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract> })
+  @ApiBody({ type: [UpdateSalesManagerMerchantContractDto] })
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractsResponse<SalesManagerMerchantContract> })
   @Put("bulk")
   @LogExecutionTime({
     layer: "controller",
@@ -247,17 +247,17 @@ export class SalesmanagerMerchantContractCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandController.name)
-      .get(SalesmanagerMerchantContractCommandController.name),
+      .registerClient(SalesManagerMerchantContractCommandController.name)
+      .get(SalesManagerMerchantContractCommandController.name),
   })
   async bulkUpdate(
-    @Body() partialEntities: UpdateSalesmanagerMerchantContractDto[]
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+    @Body() partialEntities: UpdateSalesManagerMerchantContractDto[]
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const entities = await this.service.bulkUpdate(partialEntities);
 
       if (!entities) {
-        throw new NotFoundException("SalesmanagerMerchantContract entities not found.");
+        throw new NotFoundException("SalesManagerMerchantContract entities not found.");
       }
 
       return entities;
@@ -270,12 +270,12 @@ export class SalesmanagerMerchantContractCommandController {
   
   
   @ApiOperation({ summary: "Delete an salesmanagermerchantcontract" })   
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>,description:
-    "Instancia de SalesmanagerMerchantContract eliminada satisfactoriamente.", })
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractResponse<SalesManagerMerchantContract>,description:
+    "Instancia de SalesManagerMerchantContract eliminada satisfactoriamente.", })
   @ApiResponse({
     status: 400,
     description:
-      "EL ID en la URL no coincide con la instancia SalesmanagerMerchantContract a eliminar.",
+      "EL ID en la URL no coincide con la instancia SalesManagerMerchantContract a eliminar.",
   }) // ✅ Nuevo status para el error de validación
   @Delete(":id")
   @LogExecutionTime({
@@ -293,16 +293,16 @@ export class SalesmanagerMerchantContractCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandController.name)
-      .get(SalesmanagerMerchantContractCommandController.name),
+      .registerClient(SalesManagerMerchantContractCommandController.name)
+      .get(SalesManagerMerchantContractCommandController.name),
   })
-  async delete(@Param("id") id: string): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  async delete(@Param("id") id: string): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
        
       const result = await this.service.delete(id);
 
       if (!result) {
-        throw new NotFoundException("SalesmanagerMerchantContract entity not found.");
+        throw new NotFoundException("SalesManagerMerchantContract entity not found.");
       }
 
       return result;
@@ -332,8 +332,8 @@ export class SalesmanagerMerchantContractCommandController {
       }
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractCommandController.name)
-      .get(SalesmanagerMerchantContractCommandController.name),
+      .registerClient(SalesManagerMerchantContractCommandController.name)
+      .get(SalesManagerMerchantContractCommandController.name),
   })
   async bulkDelete(@Query("ids") ids: string[]): Promise<DeleteResult> {
     return await this.service.bulkDelete(ids);

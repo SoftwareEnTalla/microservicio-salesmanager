@@ -30,9 +30,9 @@
 
 
 import { BaseEvent } from './base.event';
-import { SalesmanagerMerchantContractCreatedEvent } from './salesmanagermerchantcontractcreated.event';
-import { SalesmanagerMerchantContractUpdatedEvent } from './salesmanagermerchantcontractupdated.event';
-import { SalesmanagerMerchantContractDeletedEvent } from './salesmanagermerchantcontractdeleted.event';
+import { SalesManagerMerchantContractCreatedEvent } from './salesmanagermerchantcontractcreated.event';
+import { SalesManagerMerchantContractUpdatedEvent } from './salesmanagermerchantcontractupdated.event';
+import { SalesManagerMerchantContractDeletedEvent } from './salesmanagermerchantcontractdeleted.event';
 
 export type RegisteredEventClass<T extends BaseEvent = BaseEvent> = new (
   aggregateId: string,
@@ -70,9 +70,9 @@ const EVENT_DEFINITION_OVERRIDES: Partial<Record<string, Partial<Omit<Registered
 };
 
 export const EVENT_DEFINITIONS: Record<string, RegisteredEventDefinition> = {
-  'salesmanager-merchant-contract-created': createEventDefinition('salesmanager-merchant-contract-created', SalesmanagerMerchantContractCreatedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-merchant-contract-created']),
-  'salesmanager-merchant-contract-updated': createEventDefinition('salesmanager-merchant-contract-updated', SalesmanagerMerchantContractUpdatedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-merchant-contract-updated']),
-  'salesmanager-merchant-contract-deleted': createEventDefinition('salesmanager-merchant-contract-deleted', SalesmanagerMerchantContractDeletedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-merchant-contract-deleted']),
+  'salesmanager-merchant-contract-created': createEventDefinition('salesmanager-merchant-contract-created', SalesManagerMerchantContractCreatedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-merchant-contract-created']),
+  'salesmanager-merchant-contract-updated': createEventDefinition('salesmanager-merchant-contract-updated', SalesManagerMerchantContractUpdatedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-merchant-contract-updated']),
+  'salesmanager-merchant-contract-deleted': createEventDefinition('salesmanager-merchant-contract-deleted', SalesManagerMerchantContractDeletedEvent, EVENT_DEFINITION_OVERRIDES['salesmanager-merchant-contract-deleted']),
 
 };
 

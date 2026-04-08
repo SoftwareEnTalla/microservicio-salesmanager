@@ -37,31 +37,31 @@ import {
   NotFoundException,
   Logger,
 } from "@nestjs/common";
-import { SalesmanagerMerchantContractQueryService } from "../services/salesmanagermerchantcontractquery.service";
+import { SalesManagerMerchantContractQueryService } from "../services/salesmanagermerchantcontractquery.service";
 import { FindManyOptions } from "typeorm";
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam } from "@nestjs/swagger";
 import { LogExecutionTime } from "src/common/logger/loggers.functions";
-import { SalesmanagerMerchantContractResponse, SalesmanagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
+import { SalesManagerMerchantContractResponse, SalesManagerMerchantContractsResponse } from "../types/salesmanagermerchantcontract.types";
 import { LoggerClient } from "src/common/logger/logger.client";
-import { SalesmanagerMerchantContract } from "../entities/salesmanager-merchant-contract.entity";
+import { SalesManagerMerchantContract } from "../entities/sales-manager-merchant-contract.entity";
 import { PaginationArgs } from "src/common/dto/args/pagination.args";
 import { OrderBy, valueOfOrderBy } from "src/common/types/common.types";
 import { Helper } from "src/common/helpers/helpers";
-import { SalesmanagerMerchantContractDto } from "../dtos/all-dto";
+import { SalesManagerMerchantContractDto } from "../dtos/all-dto";
 
 import { logger } from '@core/logs/logger';
 
-@ApiTags("SalesmanagerMerchantContract Query")
+@ApiTags("SalesManagerMerchantContract Query")
 @Controller("salesmanagermerchantcontracts/query")
-export class SalesmanagerMerchantContractQueryController {
-  #logger = new Logger(SalesmanagerMerchantContractQueryController.name);
+export class SalesManagerMerchantContractQueryController {
+  #logger = new Logger(SalesManagerMerchantContractQueryController.name);
 
-  constructor(private readonly service: SalesmanagerMerchantContractQueryService) {}
+  constructor(private readonly service: SalesManagerMerchantContractQueryService) {}
 
   @Get("list")
   @ApiOperation({ summary: "Get all salesmanagermerchantcontract with optional pagination" })
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractsResponse })
-  @ApiQuery({ name: "options", required: false, type: SalesmanagerMerchantContractDto }) // Ajustar según el tipo real
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractsResponse })
+  @ApiQuery({ name: "options", required: false, type: SalesManagerMerchantContractDto }) // Ajustar según el tipo real
   @ApiQuery({ name: "page", required: false, type: Number })
   @ApiQuery({ name: "size", required: false, type: Number })
   @ApiQuery({ name: "sort", required: false, type: String })
@@ -75,12 +75,12 @@ export class SalesmanagerMerchantContractQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findAll(
-    @Query("options") options?: FindManyOptions<SalesmanagerMerchantContract>    
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+    @Query("options") options?: FindManyOptions<SalesManagerMerchantContract>    
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
      
       const salesmanagermerchantcontracts = await this.service.findAll(options);
@@ -94,8 +94,8 @@ export class SalesmanagerMerchantContractQueryController {
 
   @Get(":id")
   @ApiOperation({ summary: "Get salesmanagermerchantcontract by ID" })
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract> })
-  @ApiResponse({ status: 404, description: "SalesmanagerMerchantContract not found" })
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractResponse<SalesManagerMerchantContract> })
+  @ApiResponse({ status: 404, description: "SalesManagerMerchantContract not found" })
   @ApiParam({ name: 'id', required: true, description: 'ID of the salesmanagermerchantcontract to retrieve', type: String })
   @LogExecutionTime({
     layer: "controller",
@@ -103,15 +103,15 @@ export class SalesmanagerMerchantContractQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
-  async findById(@Param("id") id: string): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  async findById(@Param("id") id: string): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
       const salesmanagermerchantcontract = await this.service.findOne({ where: { id } });
       if (!salesmanagermerchantcontract) {
         throw new NotFoundException(
-          "SalesmanagerMerchantContract no encontrado para el id solicitado"
+          "SalesManagerMerchantContract no encontrado para el id solicitado"
         );
       }
       return salesmanagermerchantcontract;
@@ -125,21 +125,21 @@ export class SalesmanagerMerchantContractQueryController {
   @ApiOperation({ summary: "Find salesmanagermerchantcontract by specific field" })
   @ApiQuery({ name: "value", required: true, description: 'Value to search for', type: String }) // Documenta el parámetro de consulta
   @ApiParam({ name: 'field', required: true, description: 'Field to filter salesmanagermerchantcontract', type: String }) // Documenta el parámetro de la ruta
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractsResponse })
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractsResponse })
   @LogExecutionTime({
     layer: "controller",
     callback: async (logData, client) => {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findByField(
     @Param("field") field: string, // Obtiene el campo de la ruta
     @Query("value") value: string, // Obtiene el valor de la consulta
     @Query() paginationArgs?: PaginationArgs
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const entities = await this.service.findAndCount({
         where: { [field]: value },
@@ -151,7 +151,7 @@ export class SalesmanagerMerchantContractQueryController {
 
       if (!entities) {
         throw new NotFoundException(
-          "SalesmanagerMerchantContract no encontrados para la propiedad y valor especificado"
+          "SalesManagerMerchantContract no encontrados para la propiedad y valor especificado"
         );
       }
       return entities;
@@ -164,8 +164,8 @@ export class SalesmanagerMerchantContractQueryController {
 
   @Get("pagination")
   @ApiOperation({ summary: "Find salesmanagermerchantcontracts with pagination" })
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract> })
-  @ApiQuery({ name: "options", required: false, type: SalesmanagerMerchantContractDto }) // Ajustar según el tipo real
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractsResponse<SalesManagerMerchantContract> })
+  @ApiQuery({ name: "options", required: false, type: SalesManagerMerchantContractDto }) // Ajustar según el tipo real
   @ApiQuery({ name: "page", required: false, type: Number })
   @ApiQuery({ name: "size", required: false, type: Number })
   @ApiQuery({ name: "sort", required: false, type: String })
@@ -179,11 +179,11 @@ export class SalesmanagerMerchantContractQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findWithPagination(
-    @Query() options: FindManyOptions<SalesmanagerMerchantContract>,
+    @Query() options: FindManyOptions<SalesManagerMerchantContract>,
     @Query("page") page?: number,
     @Query("size") size?: number,
     @Query("sort") sort?: string,
@@ -191,7 +191,7 @@ export class SalesmanagerMerchantContractQueryController {
     @Query("search") search?: string,
     @Query("initDate") initDate?: Date,
     @Query("endDate") endDate?: Date
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
      const paginationArgs: PaginationArgs = PaginationArgs.createPaginator(
         page || 1,
@@ -207,7 +207,7 @@ export class SalesmanagerMerchantContractQueryController {
         paginationArgs
       );
       if (!entities) {
-        throw new NotFoundException("Entidades SalesmanagerMerchantContracts no encontradas.");
+        throw new NotFoundException("Entidades SalesManagerMerchantContracts no encontradas.");
       }
       return entities;
     } catch (error) {
@@ -225,8 +225,8 @@ export class SalesmanagerMerchantContractQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async count(): Promise<number> {
     return this.service.count();
@@ -234,7 +234,7 @@ export class SalesmanagerMerchantContractQueryController {
 
   @Get("search")
   @ApiOperation({ summary: "Find and count salesmanagermerchantcontracts with conditions" })
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract> })
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractsResponse<SalesManagerMerchantContract> })
   @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
   @ApiQuery({ name: "page", required: false, type: Number })
   @ApiQuery({ name: "size", required: false, type: Number })
@@ -249,8 +249,8 @@ export class SalesmanagerMerchantContractQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findAndCount(
     @Query() where: Record<string, any>={},
@@ -261,7 +261,7 @@ export class SalesmanagerMerchantContractQueryController {
     @Query("search") search?: string,
     @Query("initDate") initDate?: Date,
     @Query("endDate") endDate?: Date
-  ): Promise<SalesmanagerMerchantContractsResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractsResponse<SalesManagerMerchantContract>> {
     try {
       const paginationArgs: PaginationArgs = PaginationArgs.createPaginator(
         page || 1,
@@ -279,7 +279,7 @@ export class SalesmanagerMerchantContractQueryController {
 
       if (!entities) {
         throw new NotFoundException(
-          "Entidades SalesmanagerMerchantContracts no encontradas para el criterio especificado."
+          "Entidades SalesManagerMerchantContracts no encontradas para el criterio especificado."
         );
       }
       return entities;
@@ -291,7 +291,7 @@ export class SalesmanagerMerchantContractQueryController {
 
   @Get("find-one")
   @ApiOperation({ summary: "Find one salesmanagermerchantcontract with conditions" })
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract> })
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractResponse<SalesManagerMerchantContract> })
   @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
   @LogExecutionTime({
     layer: "controller",
@@ -299,19 +299,19 @@ export class SalesmanagerMerchantContractQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findOne(
     @Query() where: Record<string, any>={}
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract>> {
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract>> {
     try {
       const entity = await this.service.findOne({
         where: where,
       });
 
       if (!entity) {
-        throw new NotFoundException("Entidad SalesmanagerMerchantContract no encontrada.");
+        throw new NotFoundException("Entidad SalesManagerMerchantContract no encontrada.");
       }
       return entity;
     } catch (error) {
@@ -322,7 +322,7 @@ export class SalesmanagerMerchantContractQueryController {
 
   @Get("find-one-or-fail")
   @ApiOperation({ summary: "Find one salesmanagermerchantcontract or return error" })
-  @ApiResponse({ status: 200, type: SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract> })
+  @ApiResponse({ status: 200, type: SalesManagerMerchantContractResponse<SalesManagerMerchantContract> })
   @ApiQuery({ name: "where", required: true, type: Object }) // Ajustar según el tipo real
   @LogExecutionTime({
     layer: "controller",
@@ -330,19 +330,19 @@ export class SalesmanagerMerchantContractQueryController {
       return await client.send(logData);
     },
     client: LoggerClient.getInstance()
-      .registerClient(SalesmanagerMerchantContractQueryService.name)
-      .get(SalesmanagerMerchantContractQueryService.name),
+      .registerClient(SalesManagerMerchantContractQueryService.name)
+      .get(SalesManagerMerchantContractQueryService.name),
   })
   async findOneOrFail(
     @Query() where: Record<string, any>={}
-  ): Promise<SalesmanagerMerchantContractResponse<SalesmanagerMerchantContract> | Error> {
+  ): Promise<SalesManagerMerchantContractResponse<SalesManagerMerchantContract> | Error> {
     try {
       const entity = await this.service.findOne({
         where: where,
       });
 
       if (!entity) {
-        return new NotFoundException("Entidad SalesmanagerMerchantContract no encontrada.");
+        return new NotFoundException("Entidad SalesManagerMerchantContract no encontrada.");
       }
       return entity;
     } catch (error) {

@@ -42,18 +42,18 @@ export abstract class BaseEntity {
   @ApiProperty({
       type: String,
       nullable: false,
-      description: "Identificador único de la instancia de SalesmanagerMerchantContract",
+      description: "Identificador único de la instancia de SalesManagerMerchantContract",
   })
-  @Field(() => String, { description: "Identificador único de la instancia de SalesmanagerMerchantContract", nullable: false })
+  @Field(() => String, { description: "Identificador único de la instancia de SalesManagerMerchantContract", nullable: false })
   id!: string;
 
   @ApiProperty({
       type: String,
       nullable: false,
-      description: "Columna discriminadora de la instancia de SalesmanagerMerchantContract",
+      description: "Columna discriminadora de la instancia de SalesManagerMerchantContract",
   })
-  @Field(() => String, { description: "🔹 Columna discriminadora de la instancia de SalesmanagerMerchantContract", nullable: false })
-  @Column({ type: 'varchar', length: 100, nullable: false,comment: 'Este es para discriminar en las instancias de SalesmanagerMerchantContract' })
+  @Field(() => String, { description: "🔹 Columna discriminadora de la instancia de SalesManagerMerchantContract", nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false,comment: 'Este es para discriminar en las instancias de SalesManagerMerchantContract' })
   @IsString()
   @IsOptional()
   type!: string;
@@ -62,9 +62,9 @@ export abstract class BaseEntity {
   @ApiProperty({
       type: Date,
       nullable: false,
-      description: "Fecha de creación de la instancia de SalesmanagerMerchantContract",
+      description: "Fecha de creación de la instancia de SalesManagerMerchantContract",
   })
-  @Field(() => Date, { description: "Fecha de creación de la instancia de SalesmanagerMerchantContract", nullable: false })
+  @Field(() => Date, { description: "Fecha de creación de la instancia de SalesManagerMerchantContract", nullable: false })
   @CreateDateColumn({type: 'date',nullable: false,comment: 'Este es un campo del tiempo de creación de la instancia'})
   @IsDate()
   creationDate: Date = new Date(); // Fecha de creación por defecto
@@ -72,9 +72,9 @@ export abstract class BaseEntity {
   @ApiProperty({
       type: Date,
       nullable: false,
-      description: "Fecha de modificación de la instancia de SalesmanagerMerchantContract",
+      description: "Fecha de modificación de la instancia de SalesManagerMerchantContract",
   })
-  @Field(() => Date, { description: "Fecha de modificación de la instancia de SalesmanagerMerchantContract", nullable: false })
+  @Field(() => Date, { description: "Fecha de modificación de la instancia de SalesManagerMerchantContract", nullable: false })
   @UpdateDateColumn({type: 'date',nullable: false,comment: 'Este es un campo del tiempo de modificación de la instancia'})
   @IsDate()
   modificationDate: Date = new Date(); // Fecha de modificación por defecto
@@ -83,10 +83,10 @@ export abstract class BaseEntity {
   @ApiProperty({
       type: String,
       nullable: false,
-      description: "Creador de la instancia de SalesmanagerMerchantContract",
+      description: "Creador de la instancia de SalesManagerMerchantContract",
   })
-  @Field(() => String, { description: "Creador de la instancia de SalesmanagerMerchantContract", nullable: false })
-  @Column({ type: 'varchar', length: 100, nullable: false,comment: 'Este es un campo del creador de la instancia de SalesmanagerMerchantContract' })
+  @Field(() => String, { description: "Creador de la instancia de SalesManagerMerchantContract", nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false,comment: 'Este es un campo del creador de la instancia de SalesManagerMerchantContract' })
   @IsString()
   @IsOptional()
   createdBy?: string; // Usuario que crea el objeto
@@ -97,7 +97,7 @@ export abstract class BaseEntity {
       description: "Muestra si el objeto está activo o no",
   })
   @Field(() => Boolean, { description: "Muestra si el objeto está activo o no", nullable: false })
-  @Column({ type: 'boolean', nullable: false,comment: 'Campo para muestrar si la instancia de SalesmanagerMerchantContract está activa o no' })
+  @Column({ type: 'boolean', nullable: false,comment: 'Campo para muestrar si la instancia de SalesManagerMerchantContract está activa o no' })
   @IsBoolean()
   isActive: boolean = false; // Por defecto, el objeto no está activo
 

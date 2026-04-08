@@ -31,20 +31,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SalesmanagerMerchantContractDto } from '../dtos/all-dto';
+import { SalesManagerMerchantContractDto } from '../dtos/all-dto';
 
 @Injectable()
-export class SalesmanagerMerchantContractGraphqlRepository {
+export class SalesManagerMerchantContractGraphqlRepository {
   constructor(
-    @InjectRepository(SalesmanagerMerchantContractDto)
-    private readonly repository: Repository<SalesmanagerMerchantContractDto>
+    @InjectRepository(SalesManagerMerchantContractDto)
+    private readonly repository: Repository<SalesManagerMerchantContractDto>
   ) {}
 
-  async findAll(): Promise<SalesmanagerMerchantContractDto[]> {
+  async findAll(): Promise<SalesManagerMerchantContractDto[]> {
     return this.repository.find();
   }
 
-  async findById(id: string): Promise<SalesmanagerMerchantContractDto | null> {
+  async findById(id: string): Promise<SalesManagerMerchantContractDto | null> {
     return this.repository.findOneBy({ id });
   }
 }
