@@ -1,12 +1,8 @@
 # SALESMANAGER Microservice
 
-**Creation Date**: 2026-04-11
+**Creation Date**: 2026-04-12
 
 **Author**: Ing. Persy Morell Guerra e Ing. Dailyn García Dominguez (SoftwarEnTalla CEO)
-
-## Contexto funcional reciente
-
-`salesmanager-service` mantiene `salesmanager-merchant-contract` como base funcional para relaciones comerciales y sincronizaciones derivadas hacia otros contextos, especialmente `security-service`.
 
 ## Microservice Structure
 
