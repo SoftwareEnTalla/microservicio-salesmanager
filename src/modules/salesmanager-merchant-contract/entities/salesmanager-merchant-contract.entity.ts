@@ -34,6 +34,7 @@ import { CreateSalesManagerMerchantContractDto, UpdateSalesManagerMerchantContra
 import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
+import GraphQLJSON from 'graphql-type-json';
 import { plainToInstance } from 'class-transformer';
 import { SalesManager } from '../../salesmanager/entities/salesmanager.entity';
 
@@ -181,7 +182,7 @@ export class SalesManagerMerchantContract extends BaseEntity {
   })
   @IsObject()
   @IsOptional()
-  @Field(() => String, { description: 'Metadatos del contrato', nullable: true })
+  @Field(() => GraphQLJSON, { description: 'Metadatos del contrato', nullable: true })
   @Column({ type: 'json', nullable: true, comment: 'Metadatos del contrato' })
   metadata?: Record<string, any> = {};
 
