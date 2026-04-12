@@ -34,6 +34,7 @@ import { CreateSalesManagerDto, UpdateSalesManagerDto, DeleteSalesManagerDto } f
 import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
+import GraphQLJSON from 'graphql-type-json';
 import { plainToInstance } from 'class-transformer';
 
 
@@ -127,7 +128,7 @@ export class SalesManager extends BaseEntity {
   })
   @IsObject()
   @IsOptional()
-  @Field(() => String, { description: 'Metadatos del gestor de ventas', nullable: true })
+  @Field(() => GraphQLJSON, { description: 'Metadatos del gestor de ventas', nullable: true })
   @Column({ type: 'json', nullable: true, comment: 'Metadatos del gestor de ventas' })
   metadata?: Record<string, any> = {};
 
