@@ -47,6 +47,11 @@ import {
   DeleteSalesManagerMerchantContractCommand
 } from '../commands/exporting.command';
 
+//Logger - Codetrace
+import { LogExecutionTime } from 'src/common/logger/loggers.functions';
+import { LoggerClient } from 'src/common/logger/logger.client';
+import { logger } from '@core/logs/logger';
+
 @Injectable()
 export class SalesManagerMerchantContractCrudSaga {
   private readonly logger = new Logger(SalesManagerMerchantContractCrudSaga.name);
@@ -63,8 +68,9 @@ export class SalesManagerMerchantContractCrudSaga {
       ofType(SalesManagerMerchantContractCreatedEvent),
       tap(event => {
         this.logger.log(`Saga iniciada para creación de SalesManagerMerchantContract: ${event.aggregateId}`);
-        // Lógica post-creación (ej: enviar notificación)
+        void this.handleSalesManagerMerchantContractCreated(event);
       }),
+      map(() => null),
       map(event => {
         // Ejecutar comandos adicionales si es necesario
         return null;
@@ -79,8 +85,9 @@ export class SalesManagerMerchantContractCrudSaga {
       ofType(SalesManagerMerchantContractUpdatedEvent),
       tap(event => {
         this.logger.log(`Saga iniciada para actualización de SalesManagerMerchantContract: ${event.aggregateId}`);
-        // Lógica post-actualización (ej: actualizar caché)
-      })
+        void this.handleSalesManagerMerchantContractUpdated(event);
+      }),
+      map(() => null)
     );
   };
 
@@ -91,8 +98,9 @@ export class SalesManagerMerchantContractCrudSaga {
       ofType(SalesManagerMerchantContractDeletedEvent),
       tap(event => {
         this.logger.log(`Saga iniciada para eliminación de SalesManagerMerchantContract: ${event.aggregateId}`);
-        // Lógica post-eliminación (ej: limpiar relaciones)
+        void this.handleSalesManagerMerchantContractDeleted(event);
       }),
+      map(() => null),
       map(event => {
         // Ejemplo: Ejecutar comando de compensación
         // return this.commandBus.execute(new CompensateDeleteCommand(...));
@@ -101,6 +109,78 @@ export class SalesManagerMerchantContractCrudSaga {
     );
   };
 
+
+
+  @LogExecutionTime({
+    layer: 'saga',
+    callback: async (logData, client) => {
+      try {
+        logger.info('Codetrace saga event:', [logData, client]);
+        return await client.send(logData);
+      } catch (error) {
+        logger.info('Error enviando traza de saga:', logData);
+        throw error;
+      }
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(SalesManagerMerchantContractCrudSaga.name)
+      .get(SalesManagerMerchantContractCrudSaga.name),
+  })
+  private async handleSalesManagerMerchantContractCreated(event: SalesManagerMerchantContractCreatedEvent): Promise<void> {
+    try {
+      this.logger.log(`Saga SalesManagerMerchantContract Created completada: ${event.aggregateId}`);
+    } catch (error: any) {
+      this.handleSagaError(error, event);
+    }
+  }
+
+
+  @LogExecutionTime({
+    layer: 'saga',
+    callback: async (logData, client) => {
+      try {
+        logger.info('Codetrace saga event:', [logData, client]);
+        return await client.send(logData);
+      } catch (error) {
+        logger.info('Error enviando traza de saga:', logData);
+        throw error;
+      }
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(SalesManagerMerchantContractCrudSaga.name)
+      .get(SalesManagerMerchantContractCrudSaga.name),
+  })
+  private async handleSalesManagerMerchantContractUpdated(event: SalesManagerMerchantContractUpdatedEvent): Promise<void> {
+    try {
+      this.logger.log(`Saga SalesManagerMerchantContract Updated completada: ${event.aggregateId}`);
+    } catch (error: any) {
+      this.handleSagaError(error, event);
+    }
+  }
+
+
+  @LogExecutionTime({
+    layer: 'saga',
+    callback: async (logData, client) => {
+      try {
+        logger.info('Codetrace saga event:', [logData, client]);
+        return await client.send(logData);
+      } catch (error) {
+        logger.info('Error enviando traza de saga:', logData);
+        throw error;
+      }
+    },
+    client: LoggerClient.getInstance()
+      .registerClient(SalesManagerMerchantContractCrudSaga.name)
+      .get(SalesManagerMerchantContractCrudSaga.name),
+  })
+  private async handleSalesManagerMerchantContractDeleted(event: SalesManagerMerchantContractDeletedEvent): Promise<void> {
+    try {
+      this.logger.log(`Saga SalesManagerMerchantContract Deleted completada: ${event.aggregateId}`);
+    } catch (error: any) {
+      this.handleSagaError(error, event);
+    }
+  }
 
   // Método para manejo de errores en sagas
   private handleSagaError(error: Error, event: any) {
