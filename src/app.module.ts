@@ -48,6 +48,9 @@ import { LoggingModule } from "./modules/salesmanager/modules/logger.module";
 import { ModuleRef } from "@nestjs/core";
 import { ServiceRegistry } from "@core/service-registry";
 import LoggerService, { logger } from "@core/logs/logger";
+import { CatalogSyncLogModule } from "./modules/catalog-sync-log/modules/catalogsynclog.module";
+import { CatalogSyncLogCommandService } from "./modules/catalog-sync-log/services/catalogsynclogcommand.service";
+import { CatalogSyncLogQueryService } from "./modules/catalog-sync-log/services/catalogsynclogquery.service";
 import { SalesManagerMerchantContractModule } from "./modules/salesmanager-merchant-contract/modules/salesmanagermerchantcontract.module";
 import { SalesManagerMerchantContractCommandService } from "./modules/salesmanager-merchant-contract/services/salesmanagermerchantcontractcommand.service";
 import { SalesManagerMerchantContractQueryService } from "./modules/salesmanager-merchant-contract/services/salesmanagermerchantcontractquery.service";
@@ -114,7 +117,8 @@ import LoggerService, { logger } from "@core/logs/logger";
      */
     CqrsModule,
     SalesManagerModule,
-        SalesManagerMerchantContractModule,    
+        CatalogSyncLogModule,
+    SalesManagerMerchantContractModule,    
     /**
      * Módulo Logger de la aplicación
      */
@@ -200,6 +204,8 @@ export class SalesManagerAppModule implements OnModuleInit {
     ServiceRegistry.getInstance().registryAll([
       SalesManagerCommandService,
       SalesManagerQueryService,
+      CatalogSyncLogCommandService,
+      CatalogSyncLogQueryService,
       SalesManagerMerchantContractCommandService,
       SalesManagerMerchantContractQueryService,    
     ]);
