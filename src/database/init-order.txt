@@ -1,0 +1,3 @@
+postgres-1-catalog-sync-log.sql
+postgres-2-salesmanager-merchant-contract-status.sql
+postgres-3-commission-mode.sql

@@ -70,6 +70,11 @@ import LoggerService, { logger } from "@core/logs/logger";
 
 */
 
+import { HorizontalModule } from "@common/horizontal";
+
+import { NomencladorListenersModule } from './modules/nomenclador-listeners/nomenclador-listeners.module';
+import { CommissionModeModule } from "./modules/commission-mode/modules/commissionmode.module";
+import { SalesmanagerMerchantContractStatusModule } from "./modules/salesmanager-merchant-contract-status/modules/salesmanagermerchantcontractstatus.module";
 @Module({
   imports: [
     // Se importa/registra el módulo de caché
@@ -118,6 +123,7 @@ import LoggerService, { logger } from "@core/logs/logger";
      * Módulos SalesManager de la aplicación
      */
     CqrsModule,
+    HorizontalModule,
     SalesManagerModule,
         CatalogSyncLogModule,
     SalesManagerMerchantContractModule,    
@@ -140,6 +146,10 @@ import LoggerService, { logger } from "@core/logs/logger";
           }),
         ]
       : []),
+  
+    NomencladorListenersModule,
+      CommissionModeModule,
+    SalesmanagerMerchantContractStatusModule,
   ],
 
   /**
