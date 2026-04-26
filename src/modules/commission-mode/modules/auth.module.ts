@@ -30,13 +30,11 @@
 
 
 import { Module } from "@nestjs/common";
-import { CommissionModeCommandController } from "../controllers/commissionmodecommand.controller";
 import { CommissionModeLoggingInterceptor } from "../interceptors/commissionmode.logging.interceptor";
 import { CommandBus, EventBus, UnhandledExceptionBus } from "@nestjs/cqrs";
 import { CommissionModeAuthGuard } from "../guards/commissionmodeauthguard.guard";
 
 @Module({
-  controllers: [CommissionModeCommandController],
   providers: [
     CommissionModeAuthGuard,
     CommissionModeLoggingInterceptor,
