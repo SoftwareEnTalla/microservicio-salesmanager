@@ -71,6 +71,7 @@ import LoggerService, { logger } from "@core/logs/logger";
 */
 
 import { HorizontalModule } from "@common/horizontal";
+import { SalesmanagerLifecycleModule } from "./modules/salesmanager-lifecycle/salesmanager-lifecycle.module";
 
 import { NomencladorListenersModule } from './modules/nomenclador-listeners/nomenclador-listeners.module';
 import { CommissionModeModule } from "./modules/commission-mode/modules/commissionmode.module";
@@ -125,6 +126,7 @@ import { SalesmanagerMerchantContractStatusModule } from "./modules/salesmanager
     CqrsModule,
     HorizontalModule,
     SalesManagerModule,
+    SalesmanagerLifecycleModule,
         CatalogSyncLogModule,
     SalesManagerMerchantContractModule,    
     /**
