@@ -96,6 +96,19 @@ export class SalesManagerMerchantContractCommandService implements OnModuleInit 
     return entityData?.[field] ?? currentData?.[field] ?? inputData?.[field];
   }
 
+  private isMissingDslValue(value: unknown): boolean {
+    return (
+      value === undefined ||
+      value === null ||
+      (typeof value === 'string' && value.trim() === '') ||
+      (Array.isArray(value) && value.length === 0) ||
+      (typeof value === 'object' &&
+        !Array.isArray(value) &&
+        Object.prototype.toString.call(value) === '[object Object]' &&
+        Object.keys(Object(value)).length === 0)
+    );
+  }
+
   private async publishDslDomainEvents(events: BaseEvent[]): Promise<void> {
     for (const event of events) {
       await this.eventPublisher.publish(event as any);
@@ -118,7 +131,10 @@ export class SalesManagerMerchantContractCommandService implements OnModuleInit 
     if (operation === 'create') {
       // Regla de servicio: active-contract-must-have-start-date
       // Todo contrato activo debe registrar fecha de inicio.
-      if (!(this.dslValue(entityData, currentData, inputData, 'status') !== 'ACTIVE' && !(this.dslValue(entityData, currentData, inputData, 'startsAt') === undefined || this.dslValue(entityData, currentData, inputData, 'startsAt') === null || (typeof this.dslValue(entityData, currentData, inputData, 'startsAt') === 'string' && String(this.dslValue(entityData, currentData, inputData, 'startsAt')).trim() === '') || (Array.isArray(this.dslValue(entityData, currentData, inputData, 'startsAt')) && this.dslValue(entityData, currentData, inputData, 'startsAt').length === 0) || (typeof this.dslValue(entityData, currentData, inputData, 'startsAt') === 'object' && !Array.isArray(this.dslValue(entityData, currentData, inputData, 'startsAt')) && Object.prototype.toString.call(this.dslValue(entityData, currentData, inputData, 'startsAt')) === '[object Object]' && Object.keys(Object(this.dslValue(entityData, currentData, inputData, 'startsAt'))).length === 0)))) {
+      if (
+        this.dslValue(entityData, currentData, inputData, 'status') === 'ACTIVE' &&
+        this.isMissingDslValue(this.dslValue(entityData, currentData, inputData, 'startsAt'))
+      ) {
         throw new Error('SALESMANAGER_CONTRACT_001: El contrato activo debe tener fecha de inicio');
       }
 
@@ -127,7 +143,10 @@ export class SalesManagerMerchantContractCommandService implements OnModuleInit 
     if (operation === 'update') {
       // Regla de servicio: active-contract-must-have-start-date
       // Todo contrato activo debe registrar fecha de inicio.
-      if (!(this.dslValue(entityData, currentData, inputData, 'status') !== 'ACTIVE' && !(this.dslValue(entityData, currentData, inputData, 'startsAt') === undefined || this.dslValue(entityData, currentData, inputData, 'startsAt') === null || (typeof this.dslValue(entityData, currentData, inputData, 'startsAt') === 'string' && String(this.dslValue(entityData, currentData, inputData, 'startsAt')).trim() === '') || (Array.isArray(this.dslValue(entityData, currentData, inputData, 'startsAt')) && this.dslValue(entityData, currentData, inputData, 'startsAt').length === 0) || (typeof this.dslValue(entityData, currentData, inputData, 'startsAt') === 'object' && !Array.isArray(this.dslValue(entityData, currentData, inputData, 'startsAt')) && Object.prototype.toString.call(this.dslValue(entityData, currentData, inputData, 'startsAt')) === '[object Object]' && Object.keys(Object(this.dslValue(entityData, currentData, inputData, 'startsAt'))).length === 0)))) {
+      if (
+        this.dslValue(entityData, currentData, inputData, 'status') === 'ACTIVE' &&
+        this.isMissingDslValue(this.dslValue(entityData, currentData, inputData, 'startsAt'))
+      ) {
         throw new Error('SALESMANAGER_CONTRACT_001: El contrato activo debe tener fecha de inicio');
       }
 

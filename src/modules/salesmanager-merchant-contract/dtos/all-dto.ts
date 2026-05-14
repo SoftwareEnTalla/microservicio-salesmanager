@@ -199,6 +199,46 @@ export class BaseSalesManagerMerchantContractDto {
   allowsReferralCommissions!: boolean;
 
   @ApiProperty({
+    type: () => Number,
+    nullable: false,
+    description: 'Cantidad máxima de niveles referral habilitados en el contrato',
+  })
+  @IsInt()
+  @IsOptional()
+  @Field(() => Int, { description: 'Cantidad máxima de niveles referral habilitados en el contrato', nullable: false })
+  maxReferralLevels: number = 1;
+
+  @ApiProperty({
+    type: () => String,
+    nullable: true,
+    description: 'Código de política de rank comercial aplicada al contrato',
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, { description: 'Código de política de rank comercial aplicada al contrato', nullable: true })
+  rankPolicyCode?: string = '';
+
+  @ApiProperty({
+    type: () => String,
+    nullable: true,
+    description: 'Política de retención o permanencia del contrato comercial',
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, { description: 'Política de retención o permanencia del contrato comercial', nullable: true })
+  retentionPolicy?: string = '';
+
+  @ApiProperty({
+    type: () => Object,
+    nullable: true,
+    description: 'Matriz explícita de niveles y porcentajes de comisión del contrato',
+  })
+  @IsObject()
+  @IsOptional()
+  @Field(() => GraphQLJSON, { description: 'Matriz explícita de niveles y porcentajes de comisión del contrato', nullable: true })
+  commissionLevelMatrix?: Record<string, any> = {};
+
+  @ApiProperty({
     type: () => String,
     nullable: true,
     description: 'Resumen de términos y condiciones',

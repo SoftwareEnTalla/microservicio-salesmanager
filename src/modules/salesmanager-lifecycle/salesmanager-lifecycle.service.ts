@@ -7,13 +7,24 @@ type SalesmanagerLifecycleRow = {
   name: string;
   contractCode: string | null;
   salesManagerId: string | null;
+  userId: string | null;
+  managerCode: string | null;
   merchantId: string | null;
   status: string | null;
+  approvalStatus: string | null;
   commissionMode: string | null;
   commissionValue: number;
+  commissionPlanId: string | null;
+  referralTreeReference: string | null;
+  contractSnapshotVersion: string | null;
+  termsSummary: string | null;
   startsAt: string | null;
   endsAt: string | null;
   allowsReferralCommissions: boolean;
+  maxReferralLevels: number;
+  rankPolicyCode: string | null;
+  retentionPolicy: string | null;
+  commissionLevelMatrix: Record<string, unknown> | null;
   creationDate: string | null;
   modificationDate: string | null;
 };
@@ -37,7 +48,14 @@ export class SalesmanagerLifecycleService {
             activeContracts: 0,
             suspendedContracts: 0,
             expiredContracts: 0,
+            commerciallyApprovedContracts: 0,
             contractsWithReferral: 0,
+            multilevelContracts: 0,
+            contractsWithRankPolicy: 0,
+            contractsLinkedToCommissionPlan: 0,
+            contractsLinkedToReferralTree: 0,
+            contractsReadyForLiquidation: 0,
+            contractsPendingCommercialPolicy: 0,
             currentlyEffectiveContracts: 0,
             commissionModesConfigured: 0,
             contractStatusesConfigured: 0,
@@ -51,20 +69,41 @@ export class SalesmanagerLifecycleService {
     const safeLimit = Math.max(1, Math.min(limit, 20));
     const [contractTotals] = await dataSource.query(
       `SELECT
-         COUNT(*)::int AS "totalContracts",
-         COUNT(*) FILTER (WHERE UPPER(COALESCE(status, 'DRAFT')) = 'DRAFT')::int AS "draftContracts",
-         COUNT(*) FILTER (WHERE UPPER(COALESCE(status, '')) = 'ACTIVE')::int AS "activeContracts",
-         COUNT(*) FILTER (WHERE UPPER(COALESCE(status, '')) IN ('SUSPENDED', 'PAUSED'))::int AS "suspendedContracts",
-         COUNT(*) FILTER (WHERE UPPER(COALESCE(status, '')) = 'EXPIRED')::int AS "expiredContracts",
-         COUNT(*) FILTER (WHERE COALESCE("allowsReferralCommissions", false) = true)::int AS "contractsWithReferral",
-         COUNT(*) FILTER (
-           WHERE COALESCE("startsAt", NOW()) <= NOW()
-             AND ("endsAt" IS NULL OR "endsAt" >= NOW())
-             AND UPPER(COALESCE(status, '')) IN ('ACTIVE', 'CONFIRMED')
+         COUNT(contract.id)::int AS "totalContracts",
+         COUNT(contract.id) FILTER (WHERE UPPER(COALESCE(contract.status, 'DRAFT')) = 'DRAFT')::int AS "draftContracts",
+         COUNT(contract.id) FILTER (WHERE UPPER(COALESCE(contract.status, '')) = 'ACTIVE')::int AS "activeContracts",
+         COUNT(contract.id) FILTER (WHERE UPPER(COALESCE(contract.status, '')) IN ('SUSPENDED', 'PAUSED'))::int AS "suspendedContracts",
+         COUNT(contract.id) FILTER (WHERE UPPER(COALESCE(contract.status, '')) = 'EXPIRED')::int AS "expiredContracts",
+         COUNT(contract.id) FILTER (WHERE UPPER(COALESCE(sm."approvalStatus", '')) IN ('APPROVED', 'ACTIVE', 'ENABLED'))::int AS "commerciallyApprovedContracts",
+         COUNT(contract.id) FILTER (WHERE COALESCE(contract."allowsReferralCommissions", false) = true)::int AS "contractsWithReferral",
+         COUNT(contract.id) FILTER (WHERE COALESCE(contract."maxReferralLevels", 1) > 1)::int AS "multilevelContracts",
+         COUNT(contract.id) FILTER (WHERE COALESCE(NULLIF(contract."rankPolicyCode", ''), '') <> '')::int AS "contractsWithRankPolicy",
+         COUNT(contract.id) FILTER (WHERE contract."commissionMode" IS NOT NULL AND sm."commissionPlanId" IS NOT NULL)::int AS "contractsLinkedToCommissionPlan",
+         COUNT(contract.id) FILTER (WHERE COALESCE(NULLIF(sm."referralTreeReference", ''), '') <> '')::int AS "contractsLinkedToReferralTree",
+         COUNT(contract.id) FILTER (
+           WHERE UPPER(COALESCE(sm."approvalStatus", '')) IN ('APPROVED', 'ACTIVE', 'ENABLED')
+             AND contract."commissionMode" IS NOT NULL
+             AND sm."commissionPlanId" IS NOT NULL
+             AND COALESCE(NULLIF(sm."referralTreeReference", ''), '') <> ''
+         )::int AS "contractsReadyForLiquidation",
+         COUNT(contract.id) FILTER (
+           WHERE UPPER(COALESCE(sm."approvalStatus", 'DRAFT')) NOT IN ('APPROVED', 'ACTIVE', 'ENABLED')
+              OR contract."commissionMode" IS NULL
+              OR sm."commissionPlanId" IS NULL
+              OR COALESCE(NULLIF(sm."referralTreeReference", ''), '') = ''
+         )::int AS "contractsPendingCommercialPolicy",
+         COUNT(contract.id) FILTER (
+           WHERE COALESCE(contract."startsAt", NOW()) <= NOW()
+             AND (contract."endsAt" IS NULL OR contract."endsAt" >= NOW())
+             AND UPPER(COALESCE(contract.status, '')) IN ('ACTIVE', 'CONFIRMED')
          )::int AS "currentlyEffectiveContracts"
-       FROM salesmanager_merchant_contract_base_entity
-       WHERE COALESCE("isActive", true) = true
-         AND type = 'salesmanagermerchantcontract'`,
+       FROM salesmanager_merchant_contract_base_entity contract
+       LEFT JOIN salesmanager_base_entity sm
+         ON sm.id = contract."salesManagerId"
+        AND COALESCE(sm."isActive", true) = true
+        AND sm.type = 'salesmanager'
+       WHERE COALESCE(contract."isActive", true) = true
+         AND contract.type = 'salesmanagermerchantcontract'`,
     );
 
     const [modeTotals] = await dataSource.query(
@@ -74,14 +113,38 @@ export class SalesmanagerLifecycleService {
     );
 
     const latest = await dataSource.query(
-      `SELECT id, name, "contractCode", "salesManagerId", "merchantId", status, "commissionMode",
-              COALESCE("commissionValue", 0)::float AS "commissionValue", "startsAt", "endsAt",
-              COALESCE("allowsReferralCommissions", false) AS "allowsReferralCommissions",
-              "creationDate", "modificationDate"
-       FROM salesmanager_merchant_contract_base_entity
-       WHERE COALESCE("isActive", true) = true
-         AND type = 'salesmanagermerchantcontract'
-       ORDER BY COALESCE("modificationDate", "creationDate") DESC
+      `SELECT contract.id, contract.name, contract."contractCode", contract."salesManagerId", sm."userId", sm."managerCode", contract."merchantId",
+              contract.status, sm."approvalStatus", contract."commissionMode",
+              COALESCE(contract."commissionValue", 0)::float AS "commissionValue",
+              sm."commissionPlanId", sm."referralTreeReference",
+              COALESCE(
+                NULLIF(contract.metadata::jsonb ->> 'contractSnapshotVersion', ''),
+                NULLIF(sm.metadata::jsonb ->> 'commissionSnapshotVersion', ''),
+                CONCAT(
+                  'sales-',
+                  COALESCE(sm."commissionPlanId"::text, 'na'),
+                  '-',
+                  COALESCE(NULLIF(sm."referralTreeReference", ''), 'no-referral'),
+                  '-',
+                  COALESCE(contract."commissionMode", 'PERCENTAGE')
+                )
+              ) AS "contractSnapshotVersion",
+              NULLIF(contract."termsSummary", '') AS "termsSummary",
+              contract."startsAt", contract."endsAt",
+              COALESCE(contract."allowsReferralCommissions", false) AS "allowsReferralCommissions",
+              COALESCE(contract."maxReferralLevels", 1)::int AS "maxReferralLevels",
+              NULLIF(contract."rankPolicyCode", '') AS "rankPolicyCode",
+              NULLIF(contract."retentionPolicy", '') AS "retentionPolicy",
+              contract."commissionLevelMatrix" AS "commissionLevelMatrix",
+              contract."creationDate", contract."modificationDate"
+       FROM salesmanager_merchant_contract_base_entity contract
+       LEFT JOIN salesmanager_base_entity sm
+         ON sm.id = contract."salesManagerId"
+        AND COALESCE(sm."isActive", true) = true
+        AND sm.type = 'salesmanager'
+       WHERE COALESCE(contract."isActive", true) = true
+         AND contract.type = 'salesmanagermerchantcontract'
+       ORDER BY COALESCE(contract."modificationDate", contract."creationDate") DESC
        LIMIT $1`,
       [safeLimit],
     );
@@ -99,7 +162,14 @@ export class SalesmanagerLifecycleService {
           activeContracts,
           suspendedContracts: Number(contractTotals?.suspendedContracts ?? 0),
           expiredContracts: Number(contractTotals?.expiredContracts ?? 0),
+          commerciallyApprovedContracts: Number(contractTotals?.commerciallyApprovedContracts ?? 0),
           contractsWithReferral: Number(contractTotals?.contractsWithReferral ?? 0),
+          multilevelContracts: Number(contractTotals?.multilevelContracts ?? 0),
+          contractsWithRankPolicy: Number(contractTotals?.contractsWithRankPolicy ?? 0),
+          contractsLinkedToCommissionPlan: Number(contractTotals?.contractsLinkedToCommissionPlan ?? 0),
+          contractsLinkedToReferralTree: Number(contractTotals?.contractsLinkedToReferralTree ?? 0),
+          contractsReadyForLiquidation: Number(contractTotals?.contractsReadyForLiquidation ?? 0),
+          contractsPendingCommercialPolicy: Number(contractTotals?.contractsPendingCommercialPolicy ?? 0),
           currentlyEffectiveContracts: Number(contractTotals?.currentlyEffectiveContracts ?? 0),
           commissionModesConfigured: Number(modeTotals?.commissionModesConfigured ?? 0),
           contractStatusesConfigured: Number(modeTotals?.contractStatusesConfigured ?? 0),

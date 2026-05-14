@@ -165,6 +165,50 @@ export class SalesManagerMerchantContract extends BaseEntity {
   allowsReferralCommissions!: boolean;
 
   @ApiProperty({
+    type: () => Number,
+    nullable: false,
+    description: 'Cantidad máxima de niveles referral habilitados en el contrato',
+  })
+  @IsInt()
+  @IsOptional()
+  @Field(() => Int, { description: 'Cantidad máxima de niveles referral habilitados en el contrato', nullable: false })
+  @Column({ type: 'int', nullable: false, default: 1, comment: 'Cantidad máxima de niveles referral habilitados en el contrato' })
+  maxReferralLevels!: number;
+
+  @ApiProperty({
+    type: () => String,
+    nullable: true,
+    description: 'Código de política de rank comercial aplicada al contrato',
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, { description: 'Código de política de rank comercial aplicada al contrato', nullable: true })
+  @Column({ type: 'varchar', nullable: true, length: 120, comment: 'Código de política de rank comercial aplicada al contrato' })
+  rankPolicyCode?: string = '';
+
+  @ApiProperty({
+    type: () => String,
+    nullable: true,
+    description: 'Política de retención o permanencia del contrato comercial',
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, { description: 'Política de retención o permanencia del contrato comercial', nullable: true })
+  @Column({ type: 'varchar', nullable: true, length: 255, comment: 'Política de retención o permanencia del contrato comercial' })
+  retentionPolicy?: string = '';
+
+  @ApiProperty({
+    type: () => Object,
+    nullable: true,
+    description: 'Matriz explícita de niveles y porcentajes de comisión del contrato',
+  })
+  @IsObject()
+  @IsOptional()
+  @Field(() => GraphQLJSON, { description: 'Matriz explícita de niveles y porcentajes de comisión del contrato', nullable: true })
+  @Column({ type: 'json', nullable: true, comment: 'Matriz explícita de niveles y porcentajes de comisión del contrato' })
+  commissionLevelMatrix?: Record<string, any> = {};
+
+  @ApiProperty({
     type: () => String,
     nullable: true,
     description: 'Resumen de términos y condiciones',
@@ -201,7 +245,17 @@ export class SalesManagerMerchantContract extends BaseEntity {
   protected executeDslLifecycle(): void {
     // Rule: active-contract-must-have-start-date
     // Todo contrato activo debe registrar fecha de inicio.
-    if (!(this.status !== 'ACTIVE' && !(this.startsAt === undefined || this.startsAt === null || (typeof this.startsAt === 'string' && String(this.startsAt).trim() === '') || (Array.isArray(this.startsAt) && this.startsAt.length === 0) || (typeof this.startsAt === 'object' && !Array.isArray(this.startsAt) && Object.prototype.toString.call(this.startsAt) === '[object Object]' && Object.keys(Object(this.startsAt)).length === 0)))) {
+    if (
+      this.status === 'ACTIVE' &&
+      (this.startsAt === undefined ||
+        this.startsAt === null ||
+        (typeof this.startsAt === 'string' && String(this.startsAt).trim() === '') ||
+        (Array.isArray(this.startsAt) && this.startsAt.length === 0) ||
+        (typeof this.startsAt === 'object' &&
+          !Array.isArray(this.startsAt) &&
+          Object.prototype.toString.call(this.startsAt) === '[object Object]' &&
+          Object.keys(Object(this.startsAt)).length === 0))
+    ) {
       throw new Error('SALESMANAGER_CONTRACT_001: El contrato activo debe tener fecha de inicio');
     }
   }
